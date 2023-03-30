@@ -49,6 +49,7 @@ setuptools.setup(
         "pandas>=1.5.3",
         "pyarrow>=11.0.0",
         "grpcio>=1.53.0",
+        "protobuf>=4.22.1",
     ],
     extras_require={
         "protobuf": ["grpcio>=1.43.0"]
