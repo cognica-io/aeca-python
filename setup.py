@@ -16,7 +16,8 @@ setuptools.setup(
     keywords=["Cognica", "key-value", "document store",
               "full-text search", "database"],
     version="0.1.0",
-    packages=setuptools.find_packages(include=["cognica"]),
+    packages=setuptools.find_namespace_packages(where="src"),
+    package_dir={"": "src"},
     url="https://github.com/appspand/cognica-python",
     project_urls={
         "Documentation": "https://github.com/appspand/cognica-python",
