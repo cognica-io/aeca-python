@@ -1,0 +1,104 @@
+//
+// Appspand Cognica
+//
+// Copyright (c) 2023 Appspand, Inc.
+//
+
+syntax = "proto3";
+
+package cognica.rpc.sentence_transformer;
+
+option cc_enable_arenas = true;
+
+service SentenceTransformerService {
+  rpc encode(SentenceEncoderRequest) returns (SentenceEncoderResponse) {}
+}
+
+service CrossEncoderService {
+  rpc predict(CrossEncoderRequest) returns (CrossEncoderResponse) {}
+}
+
+service CLIPEncoderService {
+  rpc encode(CLIPEncoderRequest) returns (CLIPEncoderResponse) {}
+}
+
+service QAEncoderService {
+  rpc predict(QAEncoderRequest) returns (QAEncoderResponse) {}
+}
+
+enum StatusType {
+  kOK = 0;
+  kNotFound = 1;
+  kInternal = 10;
+}
+
+message Tensor {
+  int32 dims = 1;
+  repeated float data = 2;
+}
+
+message SentenceEncoderRequest {
+  string model_name = 1;
+  repeated string sentences = 2;
+}
+
+message SentenceEncoderResponse {
+  StatusType status = 1;
+  string model_name = 2;
+  repeated Tensor tensors = 3;
+}
+
+message SentencePair {
+  string sentence1 = 1;
+  string sentence2 = 2;
+}
+
+message CrossEncoderRequest {
+  string model_name = 1;
+  repeated SentencePair sentences = 2;
+}
+
+message CrossEncoderResponse {
+  StatusType status = 1;
+  string model_name = 2;
+  repeated float scores = 3;
+}
+
+message CLIPEncoderRequest {
+  enum InputFormat {
+    kText = 0;
+    kImage = 1;
+  }
+
+  string model_name = 1;
+  InputFormat format = 2;
+  repeated bytes inputs = 3;
+}
+
+message CLIPEncoderResponse {
+  StatusType status = 1;
+  string model_name = 2;
+  repeated Tensor tensors = 3;
+}
+
+message QAEncoderRequest {
+  string model_name = 1;
+  repeated string questions = 2;
+  repeated string contexts = 3;
+  int32 top_k = 4;
+}
+
+message QAEncoderResponse {
+  message Candidate {
+    float score = 1;
+    int32 begin = 2;
+    int32 end = 3;
+    string answer = 4;
+  }
+
+  message CandidateList { repeated Candidate candidates = 1; }
+
+  StatusType status = 1;
+  string model_name = 2;
+  repeated CandidateList answers = 3;
+}

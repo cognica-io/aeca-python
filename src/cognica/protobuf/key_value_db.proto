@@ -1,0 +1,125 @@
+//
+// Appspand Cognica
+//
+// Copyright (c) 2023 Appspand, Inc.
+//
+
+syntax = "proto3";
+
+package cognica.rpc.db.kv;
+
+option cc_enable_arenas = true;
+
+service KeyValueDBService {
+  rpc put(PutRequest) returns (PutResponse) {}
+  rpc remove(RemoveRequest) returns (RemoveResponse) {}
+  rpc get(GetRequest) returns (GetResponse) {}
+  rpc mget(MultiGetRequest) returns (MultiGetResponse) {}
+
+  rpc put_batch(BatchedPutRequest) returns (BatchedPutResponse) {}
+  rpc remove_batch(BatchedRemoveRequest) returns (BatchedRemoveResponse) {}
+  rpc get_batch(BatchedGetRequest) returns (BatchedGetResponse) {}
+}
+
+enum StatusType {
+  kOK = 0;
+  kNotFound = 1;
+  kInternal = 10;
+}
+
+message Response {
+  StatusType status = 1;
+  string message = 2;
+}
+
+message PutRequest {
+  string keyspace_name = 1;
+  bytes key = 2;
+  bytes value = 3;
+  int64 ttl = 4;
+  bool create_if_missing = 5;
+}
+
+message PutResponse { Response response = 1; }
+
+message RemoveRequest {
+  string keyspace_name = 1;
+  bytes key = 2;
+}
+
+message RemoveResponse { Response response = 1; }
+
+message GetRequest {
+  string keyspace_name = 1;
+  bytes key = 2;
+}
+
+message GetResponse {
+  Response response = 1;
+  bytes value = 2;
+}
+
+message MultiGetRequest {
+  string keyspace_name = 1;
+  repeated bytes keys = 2;
+}
+
+message MultiGetResponse {
+  repeated Response responses = 1;
+  repeated bytes values = 2;
+}
+
+message BatchedPutRequest {
+  string keyspace_name = 1;
+  repeated bytes keys = 2;
+  repeated bytes values = 3;
+  repeated int64 ttls = 4;
+  bool create_if_missing = 5;
+}
+
+message BatchedPutResponse { repeated Response responses = 1; }
+
+message BatchedRemoveRequest {
+  string keyspace_name = 1;
+  repeated bytes keys = 2;
+}
+
+message BatchedRemoveResponse { repeated Response responses = 1; }
+
+message BatchedGetRequest {
+  string keyspace_name = 1;
+  repeated bytes keys = 2;
+}
+
+message BatchedGetResponse {
+  repeated Response responses = 1;
+  repeated bytes values = 2;
+}
+
+service KeyspaceManagerService {
+  rpc create_keyspace(CreateKeyspaceRequest) returns (CreateKeyspaceResponse) {}
+  rpc drop_keyspace(DropKeyspaceRequest) returns (DropKeyspaceResponse) {}
+  rpc truncate_keyspace(TruncateKeyspaceRequest)
+      returns (TruncateKeyspaceResponse) {}
+
+  rpc list_keyspaces(ListKeyspacesRequest) returns (ListKeyspacesResponse) {}
+}
+
+message CreateKeyspaceRequest { string keyspace_name = 1; }
+
+message CreateKeyspaceResponse { Response response = 1; }
+
+message DropKeyspaceRequest { string keyspace_name = 1; }
+
+message DropKeyspaceResponse { Response response = 1; }
+
+message TruncateKeyspaceRequest { string keyspace_name = 1; }
+
+message TruncateKeyspaceResponse { Response response = 1; }
+
+message ListKeyspacesRequest {}
+
+message ListKeyspacesResponse {
+  Response response = 1;
+  repeated string keyspace_names = 2;
+}

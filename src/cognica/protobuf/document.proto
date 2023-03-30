@@ -1,0 +1,35 @@
+//
+// Appspand Cognica
+//
+// Copyright (c) 2023 Appspand, Inc.
+//
+
+syntax = "proto3";
+
+package cognica.rpc.db.document;
+
+option cc_enable_arenas = true;
+
+message Value {
+  oneof value {
+    bool null = 1;
+    bool bool = 2;
+    int64 int64 = 3;
+    uint64 uint64 = 4;
+    double double = 5;
+    string string = 6;
+    Array array = 7;
+    Object object = 8;
+  }
+}
+
+message Array { repeated Value value = 1; }
+
+message Object { map<string, Value> value = 1; }
+
+message Document {
+  oneof type {
+    Object object = 1;
+    string json = 2;
+  }
+}

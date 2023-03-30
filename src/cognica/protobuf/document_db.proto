@@ -1,0 +1,180 @@
+//
+// Appspand Cognica
+//
+// Copyright (c) 2023 Appspand, Inc.
+//
+
+syntax = "proto3";
+
+package cognica.rpc.db.document;
+
+import "document.proto";
+
+option cc_enable_arenas = true;
+
+service DocumentDBService {
+  rpc find(FindRequest) returns (FindResponse) {}
+  rpc find_batch(FindBatchRequest) returns (FindBatchResponse) {}
+
+  rpc count(CountRequest) returns (CountResponse) {}
+  rpc contains(ContainsRequest) returns (ContainsResponse) {}
+
+  rpc insert(InsertRequest) returns (InsertResponse) {}
+  rpc update(UpdateRequest) returns (UpdateResponse) {}
+  rpc remove(RemoveRequest) returns (RemoveResponse) {}
+
+  rpc list_collections(ListCollectionsRequest)
+      returns (ListCollectionsResponse) {}
+  rpc truncate_collection(TruncateCollectionRequest)
+      returns (TruncateCollectionResponse) {}
+
+  rpc create_index(CreateIndexRequest) returns (CreateIndexResponse) {}
+  rpc drop_index(DropIndexRequest) returns (DropIndexResponse) {}
+  rpc get_index(GetIndexRequest) returns (GetIndexResponse) {}
+}
+
+enum IndexType {
+  kPrimaryKey = 0;
+  kSecondaryKey = 1;
+  kClusteredSecondaryKey = 2;
+  kFullTextSearchIndex = 3;
+}
+
+enum IndexStatus {
+  kEnabled = 0;  // Index is in use.
+  kDisabled = 1; // Index is disabled.
+
+  kReadyToUse = 2; // Index is ready to use and will be switched to
+                   // kEnabled.
+
+  kBuildInProgress = 3; // Index is being built.
+  kBuildFinished = 4;   // Index was built successfully and will be
+                        // switched to kReady.
+
+  kDropInProgress = 5; // Index is being dropped.
+  kDropFinished = 6;   // Index was dropped successfully and will be
+                       // removed from catalog.
+};
+
+message IndexDesc {
+  uint32 index_id = 1;
+  string index_name = 2;
+  repeated string fields = 3;
+  bool unique = 4;
+  IndexType index_type = 5;
+  IndexStatus status = 7;
+  Document options = 8;
+}
+
+message CreateIndexRequest {
+  string collection_name = 1;
+  IndexDesc index_desc = 2;
+}
+
+message CreateIndexResponse {
+  int32 status = 1;
+  string message = 2;
+}
+
+message DropIndexRequest {
+  string collection_name = 1;
+  string index_name = 2;
+}
+
+message DropIndexResponse {
+  int32 status = 1;
+  string message = 2;
+}
+
+message GetIndexRequest {
+  string collection_name = 1;
+  string index_name = 2;
+}
+
+message GetIndexResponse {
+  int32 status = 1;
+  string message = 2;
+
+  string collection_name = 3;
+  IndexDesc index_desc = 4;
+}
+
+message Query {
+  string collection_name = 1;
+  Document query = 2;
+}
+
+message FindRequest {
+  Query query = 1;
+  repeated string index_columns = 2;
+  repeated string columns = 3;
+  map<string, string> dtypes = 4;
+  int32 no_obs = 5;
+  bool private_info = 6;
+}
+
+message FindResponse {
+  int32 num_columns = 1;
+  int32 num_rows = 2;
+  bytes buffer = 3;
+}
+
+message FindBatchRequest { repeated FindRequest requests = 1; }
+
+message FindBatchResponse { repeated FindResponse responses = 1; }
+
+message CountRequest { Query query = 1; }
+
+message CountResponse {
+  int32 status = 1;
+  string message = 2;
+  int64 count = 3;
+}
+
+message ContainsRequest { Query query = 1; }
+
+message ContainsResponse {
+  int32 status = 1;
+  string message = 2;
+  bool found = 3;
+}
+
+message InsertRequest { repeated Query requests = 1; }
+
+message InsertResponse {
+  int32 status = 1;
+  string message = 2;
+}
+
+message UpdateRequest {
+  string collection_name = 1;
+  Document filter = 2;
+  Document updates = 3;
+}
+
+message UpdateResponse {
+  int32 status = 1;
+  string message = 2;
+}
+
+message RemoveRequest { repeated Query requests = 1; }
+
+message RemoveResponse {
+  int32 status = 1;
+  string message = 2;
+}
+
+message TruncateCollectionRequest { string collection_name = 1; }
+
+message TruncateCollectionResponse {
+  int32 status = 1;
+  string message = 2;
+}
+
+message ListCollectionsRequest {}
+
+message ListCollectionsResponse {
+  int32 status = 1;
+  string message = 2;
+  repeated string collection_names = 3;
+}
