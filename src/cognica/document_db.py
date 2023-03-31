@@ -66,7 +66,8 @@ def _to_json(doc):
     if isinstance(doc, document_pb2.Document):  # type: ignore
         return doc
     elif isinstance(doc, (dict, list)):
-        return json.dumps(doc, ensure_ascii=False)
+        return document_pb2.Document(   # type: ignore
+            json=json.dumps(doc, ensure_ascii=False))
 
     return document_pb2.Document(json=doc)  # type: ignore
 
