@@ -207,14 +207,13 @@ class DocumentDB:
         self._invoke(self._stub.truncate_collection, req, wait_for_ready=True)
 
     def create_index(self, collection, index_name, fields, unique, index_type,
-                     encoding_type, options) -> None:
+                     options) -> None:
         if options is not None:
             options = _to_json(options)
 
         index_desc = IndexDesc(
             index_id=0, index_name=index_name, fields=fields, unique=unique,
-            index_type=index_type, encoding_type=encoding_type,
-            status=IndexStatus.kEnabled, options=options)
+            index_type=index_type, status=IndexStatus.kEnabled, options=options)
         req = CreateIndexRequest(
             collection_name=collection, index_desc=index_desc)
         self._invoke(self._stub.create_index, req, wait_for_ready=True)
@@ -238,7 +237,6 @@ class DocumentDB:
             "fields": list(index_desc.fields),
             "unique": index_desc.unique,
             "index_type": index_desc.index_type,
-            "encoding_type": index_desc.encoding_type,
             "status": index_desc.status,
             "options": str(index_desc.options),
         })
