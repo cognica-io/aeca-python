@@ -4,6 +4,9 @@
 # Copyright (c) 2023 Appspand, Inc.
 #
 
+# pylint: disable=no-member,broad-exception-caught
+# pylint: disable=missing-class-docstring,missing-function-docstring
+
 import io
 import time
 import typing as t
