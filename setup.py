@@ -47,6 +47,7 @@ setuptools.setup(
     python_requires=">=3.7",
     install_requires=[
         "pandas>=1.5.3",
+        "polars>=0.16.18",
         "pyarrow>=11.0.0",
         "grpcio>=1.53.0",
         "protobuf>=4.22.1",
