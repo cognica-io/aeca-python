@@ -106,11 +106,10 @@ message Query {
 
 message FindRequest {
   Query query = 1;
-  repeated string index_columns = 2;
-  repeated string columns = 3;
-  map<string, string> dtypes = 4;
-  int32 no_obs = 5;
-  bool private_info = 6;
+  int32 limit = 2;
+  repeated string index_columns = 3;
+  repeated string columns = 4;
+  map<string, string> dtypes = 5;
 }
 
 message FindResponse {

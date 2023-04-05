@@ -4,6 +4,7 @@
 # Copyright (c) 2023 Appspand, Inc.
 #
 
+import io
 import json
 import time
 import typing as t
@@ -11,6 +12,7 @@ import typing as t
 import grpc
 
 import pandas as pd
+import polars as pl
 import pyarrow as pa
 import pyarrow.parquet as pq
 
@@ -74,7 +76,7 @@ def _to_json(doc):
 
 class Request:
     def __init__(self, collection, query, index_columns=None, columns=None,
-                 dtypes=None, skip=None, limit=None, private_info=False):
+                 dtypes=None, skip=None, limit=None):
         query = _to_json(query)
 
         self.collection = collection
@@ -84,7 +86,6 @@ class Request:
         self.dtypes = dtypes
         self.skip = skip
         self.limit = limit
-        self.private_info = private_info
 
 
 def _create_stub(stub: t.Callable, channel: Channel):
@@ -101,32 +102,41 @@ class DocumentDB:
         self._stub = _create_stub(DocumentDBServiceStub, channel)
         self._timeout = timeout
 
-    def find(self, collection, query, index_columns=None,
-             columns=None, dtypes=None, no_obs=0, private_info=False,
-             to_pandas=True) -> pd.DataFrame | pa.Table:
+    def find(self, collection, query, limit=None, index_columns=None,
+             columns=None, dtypes=None, to_pandas=True, to_polars=False,
+             to_arrow=False) -> pd.DataFrame | pl.DataFrame | pa.Table:
+        if to_polars or to_arrow:
+            to_pandas = False
+
         query = _to_json(query)
         req = FindRequest(
-            query=Query(
-                collection_name=collection, query=query),
-            index_columns=index_columns, columns=columns, dtypes=dtypes, no_obs=no_obs,
-            private_info=private_info)
+            query=Query(collection_name=collection, query=query), limit=limit,
+            index_columns=index_columns, columns=columns, dtypes=dtypes)
 
         resp: FindResponse = self._invoke(self._stub.find,
                                           req, wait_for_ready=True)
         if to_pandas:
-            df = self._to_dataframe(buffer=resp.buffer,
-                                    index_columns=index_columns,
-                                    columns=columns, dtypes=dtypes)
+            df = self._to_pd_dataframe(buffer=resp.buffer,
+                                       index_columns=index_columns,
+                                       columns=columns, dtypes=dtypes)
+        elif to_polars:
+            df = self._to_pl_dataframe(buffer=resp.buffer, columns=columns)
+        elif to_arrow:
+            df = self._to_arrow_table(buffer=resp.buffer, columns=columns)
         else:
             df = self._to_arrow_table(buffer=resp.buffer, columns=columns)
         del resp
 
         return df
 
-    def find_batch(self, requests, to_pandas=True) \
+    def find_batch(self, requests, to_pandas=True, to_polars=False,
+                   to_arrow=False) \
             -> list[pd.DataFrame] | list[pa.Table]:
         if not requests:
             return []
+
+        if to_polars or to_arrow:
+            to_pandas = False
 
         batch_items = []
         for req in requests:
@@ -134,8 +144,8 @@ class DocumentDB:
             item = FindRequest(
                 query=Query(
                     collection_name=req.collection, query=query),
-                index_columns=req.index_columns, columns=req.columns,
-                dtypes=req.dtypes, no_obs=req.limit, private_info=req.private_info)
+                limit=req.limit, index_columns=req.index_columns,
+                columns=req.columns, dtypes=req.dtypes)
             batch_items.append(item)
         batch_req = FindBatchRequest(requests=batch_items)
 
@@ -144,12 +154,19 @@ class DocumentDB:
                                                batch_req, wait_for_ready=True)
         for req, parquet_buffer in zip(requests, resp.buffers):
             if to_pandas:
-                df = self._to_dataframe(buffer=parquet_buffer.buffer,
-                                        index_columns=req.index_columns,
-                                        columns=req.columns, dtypes=req.dtypes)
+                df = self._to_pd_dataframe(
+                    buffer=parquet_buffer.buffer,
+                    index_columns=req.index_columns, columns=req.columns,
+                    dtypes=req.dtypes)
+            elif to_polars:
+                df = self._to_pl_dataframe(
+                    buffer=resp.buffer, columns=req.columns)
+            elif to_arrow:
+                df = self._to_arrow_table(
+                    buffer=resp.buffer, columns=req.columns)
             else:
-                df = self._to_arrow_table(buffer=parquet_buffer.buffer,
-                                          columns=req.columns)
+                df = self._to_arrow_table(
+                    buffer=parquet_buffer.buffer, columns=req.columns)
             dfs.append(df)
         del resp
 
@@ -223,7 +240,8 @@ class DocumentDB:
             collection_name=collection, index_name=index_name)
         self._invoke(self._stub.drop_index, req, wait_for_ready=True)
 
-    def get_index(self, collection, index_name) -> t.List[t.Dict[str, t.Union[int, str]]]:
+    def get_index(self, collection, index_name) \
+            -> t.List[t.Dict[str, t.Union[int, str]]]:
         req = GetIndexRequest(
             collection_name=collection, index_name=index_name)
 
@@ -244,7 +262,7 @@ class DocumentDB:
         return index_infos
 
     def empty(self, collection, query, dtypes=None) -> bool:
-        df = self.find(collection, query, dtypes=dtypes, no_obs=1)
+        df = self.find(collection, query, dtypes=dtypes, limit=1)
 
         return len(df) == 0
 
@@ -269,7 +287,8 @@ class DocumentDB:
 
         return resp
 
-    def _to_dataframe(self, buffer, index_columns=None, columns=None, dtypes=None) -> pd.DataFrame:
+    def _to_pd_dataframe(self, buffer, index_columns=None, columns=None,
+                         dtypes=None) -> pd.DataFrame:
         if len(buffer) > 0:
             table = self._to_arrow_table(buffer)
             df = table.to_pandas(split_blocks=True, self_destruct=True)
@@ -281,6 +300,20 @@ class DocumentDB:
                     df = df.set_index(index_columns)
                 except KeyError:
                     pass
+
+        if dtypes:
+            for column, type_ in dtypes.items():
+                if type_ == "json" and column in df:
+                    df[column] = df[column].apply(json.loads)
+
+        return df
+
+    def _to_pl_dataframe(self, buffer, columns=None,
+                         dtypes=None) -> pl.DataFrame:
+        if len(buffer) > 0:
+            df = pl.read_parquet(io.BytesIO(buffer), columns=columns)
+        else:
+            df = pl.DataFrame(schema=columns)
 
         if dtypes:
             for column, type_ in dtypes.items():
