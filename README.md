@@ -1,2 +1,3 @@
-# cognica-python
-A Python client for Appspand Cognica
+# Cognica Client for Python
+
+A Python client for Cognica
