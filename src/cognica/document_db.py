@@ -1,7 +1,7 @@
 #
-# Appspand Cognica
+# Cognica
 #
-# Copyright (c) 2023 Appspand, Inc.
+# Copyright (c) 2023 Cognica, Inc.
 #
 
 # pylint: disable=no-member,missing-class-docstring,missing-function-docstring
@@ -19,9 +19,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 
 from cognica.channel import Channel
-from cognica.protobuf import (
-    document_pb2, document_db_pb2, document_db_pb2_grpc
-)
+from cognica.protobuf import document_pb2, document_db_pb2, document_db_pb2_grpc
 
 
 messages: t.TypeAlias = document_db_pb2  # type: ignore
@@ -31,54 +29,67 @@ DocumentDBServiceStub = document_db_pb2_grpc.DocumentDBServiceStub
 IndexType: t.TypeAlias = messages.IndexType  # type: ignore
 IndexStatus: t.TypeAlias = messages.IndexStatus  # type: ignore
 IndexDesc: t.TypeAlias = messages.IndexDesc  # type: ignore
-CreateIndexRequest: t.TypeAlias = messages.CreateIndexRequest    # type: ignore
+CreateIndexRequest: t.TypeAlias = messages.CreateIndexRequest  # type: ignore
 CreateIndexResponse: t.TypeAlias = messages.CreateIndexResponse  # type: ignore
-DropIndexRequest: t.TypeAlias = messages.DropIndexRequest    # type: ignore
+DropIndexRequest: t.TypeAlias = messages.DropIndexRequest  # type: ignore
 DropIndexResponse: t.TypeAlias = messages.DropIndexResponse  # type: ignore
 GetIndexRequest: t.TypeAlias = messages.GetIndexRequest  # type: ignore
-GetIndexResponse: t.TypeAlias = messages.GetIndexResponse    # type: ignore
+GetIndexResponse: t.TypeAlias = messages.GetIndexResponse  # type: ignore
 
 Query: t.TypeAlias = messages.Query  # type: ignore
 
 FindRequest: t.TypeAlias = messages.FindRequest  # type: ignore
-FindResponse: t.TypeAlias = messages.FindResponse    # type: ignore
-FindBatchRequest: t.TypeAlias = messages.FindBatchRequest    # type: ignore
+FindResponse: t.TypeAlias = messages.FindResponse  # type: ignore
+FindBatchRequest: t.TypeAlias = messages.FindBatchRequest  # type: ignore
 FindBatchResponse: t.TypeAlias = messages.FindBatchResponse  # type: ignore
 
-CountRequest: t.TypeAlias = messages.CountRequest    # type: ignore
+CountRequest: t.TypeAlias = messages.CountRequest  # type: ignore
 CountResponse: t.TypeAlias = messages.CountResponse  # type: ignore
 ContainsRequest: t.TypeAlias = messages.ContainsRequest  # type: ignore
-ContainsResponse: t.TypeAlias = messages.ContainsResponse    # type: ignore
+ContainsResponse: t.TypeAlias = messages.ContainsResponse  # type: ignore
 
 InsertRequest: t.TypeAlias = messages.InsertRequest  # type: ignore
-InsertResponse: t.TypeAlias = messages.InsertResponse    # type: ignore
+InsertResponse: t.TypeAlias = messages.InsertResponse  # type: ignore
 UpdateRequest: t.TypeAlias = messages.UpdateRequest  # type: ignore
-UpdateResponse: t.TypeAlias = messages.UpdateResponse    # type: ignore
+UpdateResponse: t.TypeAlias = messages.UpdateResponse  # type: ignore
 RemoveRequest: t.TypeAlias = messages.RemoveRequest  # type: ignore
-RemoveResponse: t.TypeAlias = messages.RemoveResponse    # type: ignore
-TruncateCollectionRequest: t.TypeAlias \
-    = messages.TruncateCollectionRequest    # type: ignore
-TruncateCollectionResponse: t.TypeAlias \
-    = messages.TruncateCollectionResponse   # type: ignore
-ListCollectionsRequest: t.TypeAlias \
-    = messages.ListCollectionsRequest   # type: ignore
-ListCollectionsResponse: t.TypeAlias \
-    = messages.ListCollectionsResponse  # type: ignore
+RemoveResponse: t.TypeAlias = messages.RemoveResponse  # type: ignore
+TruncateCollectionRequest: t.TypeAlias = (
+    messages.TruncateCollectionRequest  # type: ignore
+)
+TruncateCollectionResponse: t.TypeAlias = (
+    messages.TruncateCollectionResponse  # type: ignore
+)
+ListCollectionsRequest: t.TypeAlias = (
+    messages.ListCollectionsRequest  # type: ignore
+)
+ListCollectionsResponse: t.TypeAlias = (
+    messages.ListCollectionsResponse  # type: ignore
+)
 
 
 def _to_json(doc):
     if isinstance(doc, document_pb2.Document):  # type: ignore
         return doc
     elif isinstance(doc, (dict, list)):
-        return document_pb2.Document(   # type: ignore
-            json=json.dumps(doc, ensure_ascii=False))
+        return document_pb2.Document(  # type: ignore
+            json=json.dumps(doc, ensure_ascii=False)
+        )
 
     return document_pb2.Document(json=doc)  # type: ignore
 
 
 class Request:
-    def __init__(self, collection, query, index_columns=None, columns=None,
-                 dtypes=None, skip=None, limit=None):
+    def __init__(
+        self,
+        collection,
+        query,
+        index_columns=None,
+        columns=None,
+        dtypes=None,
+        skip=None,
+        limit=None,
+    ):
         query = _to_json(query)
 
         self.collection = collection
@@ -104,23 +115,40 @@ class DocumentDB:
         self._stub = _create_stub(DocumentDBServiceStub, channel)
         self._timeout = timeout
 
-    def find(self, collection, query, limit=None, index_columns=None,
-             columns=None, dtypes=None, to_pandas=True, to_polars=False,
-             to_arrow=False) -> pd.DataFrame | pl.DataFrame | pa.Table:
+    def find(
+        self,
+        collection,
+        query,
+        limit=None,
+        index_columns=None,
+        columns=None,
+        dtypes=None,
+        to_pandas=True,
+        to_polars=False,
+        to_arrow=False,
+    ) -> pd.DataFrame | pl.DataFrame | pa.Table:
         if to_polars or to_arrow:
             to_pandas = False
 
         query = _to_json(query)
         req = FindRequest(
-            query=Query(collection_name=collection, query=query), limit=limit,
-            index_columns=index_columns, columns=columns, dtypes=dtypes)
+            query=Query(collection_name=collection, query=query),
+            limit=limit,
+            index_columns=index_columns,
+            columns=columns,
+            dtypes=dtypes,
+        )
 
-        resp: FindResponse = self._invoke(self._stub.find,
-                                          req, wait_for_ready=True)
+        resp: FindResponse = self._invoke(
+            self._stub.find, req, wait_for_ready=True
+        )
         if to_pandas:
-            df = self._to_pd_dataframe(buffer=resp.buffer,
-                                       index_columns=index_columns,
-                                       columns=columns, dtypes=dtypes)
+            df = self._to_pd_dataframe(
+                buffer=resp.buffer,
+                index_columns=index_columns,
+                columns=columns,
+                dtypes=dtypes,
+            )
         elif to_polars:
             df = self._to_pl_dataframe(buffer=resp.buffer, columns=columns)
         elif to_arrow:
@@ -131,9 +159,9 @@ class DocumentDB:
 
         return df
 
-    def find_batch(self, requests, to_pandas=True, to_polars=False,
-                   to_arrow=False) \
-            -> list[pd.DataFrame] | list[pa.Table]:
+    def find_batch(
+        self, requests, to_pandas=True, to_polars=False, to_arrow=False
+    ) -> list[pd.DataFrame] | list[pa.Table]:
         if not requests:
             return []
 
@@ -144,31 +172,39 @@ class DocumentDB:
         for req in requests:
             query = _to_json(req.query)
             item = FindRequest(
-                query=Query(
-                    collection_name=req.collection, query=query),
-                limit=req.limit, index_columns=req.index_columns,
-                columns=req.columns, dtypes=req.dtypes)
+                query=Query(collection_name=req.collection, query=query),
+                limit=req.limit,
+                index_columns=req.index_columns,
+                columns=req.columns,
+                dtypes=req.dtypes,
+            )
             batch_items.append(item)
         batch_req = FindBatchRequest(requests=batch_items)
 
         dfs = []
-        resp: FindBatchResponse = self._invoke(self._stub.find_batch,
-                                               batch_req, wait_for_ready=True)
+        resp: FindBatchResponse = self._invoke(
+            self._stub.find_batch, batch_req, wait_for_ready=True
+        )
         for req, parquet_buffer in zip(requests, resp.buffers):
             if to_pandas:
                 df = self._to_pd_dataframe(
                     buffer=parquet_buffer.buffer,
-                    index_columns=req.index_columns, columns=req.columns,
-                    dtypes=req.dtypes)
+                    index_columns=req.index_columns,
+                    columns=req.columns,
+                    dtypes=req.dtypes,
+                )
             elif to_polars:
                 df = self._to_pl_dataframe(
-                    buffer=resp.buffer, columns=req.columns)
+                    buffer=resp.buffer, columns=req.columns
+                )
             elif to_arrow:
                 df = self._to_arrow_table(
-                    buffer=resp.buffer, columns=req.columns)
+                    buffer=resp.buffer, columns=req.columns
+                )
             else:
                 df = self._to_arrow_table(
-                    buffer=parquet_buffer.buffer, columns=req.columns)
+                    buffer=parquet_buffer.buffer, columns=req.columns
+                )
             dfs.append(df)
         del resp
 
@@ -190,8 +226,9 @@ class DocumentDB:
     def update(self, collection, filter_, updates) -> None:
         filter_ = _to_json(filter_)
         updates = _to_json(updates)
-        req = UpdateRequest(collection_name=collection,
-                            filter=filter_, updates=updates)
+        req = UpdateRequest(
+            collection_name=collection, filter=filter_, updates=updates
+        )
 
         self._invoke(self._stub.update, req, wait_for_ready=True)
 
@@ -214,52 +251,64 @@ class DocumentDB:
 
         collection_names = []
         resp: ListCollectionsResponse = self._invoke(
-            self._stub.list_collections, req, wait_for_ready=True)
+            self._stub.list_collections, req, wait_for_ready=True
+        )
         for name in resp.collection_names:
             collection_names.append(name)
 
         return collection_names
 
     def truncate_collection(self, collection) -> None:
-        req = TruncateCollectionRequest(
-            collection_name=collection)
+        req = TruncateCollectionRequest(collection_name=collection)
         self._invoke(self._stub.truncate_collection, req, wait_for_ready=True)
 
-    def create_index(self, collection, index_name, fields, unique, index_type,
-                     options) -> None:
+    def create_index(
+        self, collection, index_name, fields, unique, index_type, options
+    ) -> None:
         if options is not None:
             options = _to_json(options)
 
         index_desc = IndexDesc(
-            index_id=0, index_name=index_name, fields=fields, unique=unique,
-            index_type=index_type, status=IndexStatus.kEnabled, options=options)
+            index_id=0,
+            index_name=index_name,
+            fields=fields,
+            unique=unique,
+            index_type=index_type,
+            status=IndexStatus.kEnabled,
+            options=options,
+        )
         req = CreateIndexRequest(
-            collection_name=collection, index_desc=index_desc)
+            collection_name=collection, index_desc=index_desc
+        )
         self._invoke(self._stub.create_index, req, wait_for_ready=True)
 
     def drop_index(self, collection, index_name) -> None:
         req = DropIndexRequest(
-            collection_name=collection, index_name=index_name)
+            collection_name=collection, index_name=index_name
+        )
         self._invoke(self._stub.drop_index, req, wait_for_ready=True)
 
-    def get_index(self, collection, index_name) \
-            -> t.List[t.Dict[str, t.Union[int, str]]]:
-        req = GetIndexRequest(
-            collection_name=collection, index_name=index_name)
+    def get_index(
+        self, collection, index_name
+    ) -> t.List[t.Dict[str, t.Union[int, str]]]:
+        req = GetIndexRequest(collection_name=collection, index_name=index_name)
 
         index_infos = []
         resp: IndexDesc = self._invoke(
-            self._stub.get_index, req, wait_for_ready=True)
+            self._stub.get_index, req, wait_for_ready=True
+        )
         index_desc = resp.index_desc
-        index_infos.append({
-            "index_id": index_desc.index_id,
-            "index_name": index_desc.index_name,
-            "fields": list(index_desc.fields),
-            "unique": index_desc.unique,
-            "index_type": index_desc.index_type,
-            "status": index_desc.status,
-            "options": str(index_desc.options),
-        })
+        index_infos.append(
+            {
+                "index_id": index_desc.index_id,
+                "index_name": index_desc.index_name,
+                "fields": list(index_desc.fields),
+                "unique": index_desc.unique,
+                "index_type": index_desc.index_type,
+                "status": index_desc.status,
+                "options": str(index_desc.options),
+            }
+        )
 
         return index_infos
 
@@ -273,7 +322,7 @@ class DocumentDB:
         backoff = 0.1
         resp = None
         if self._timeout:
-            kwargs['timeout'] = self._timeout
+            kwargs["timeout"] = self._timeout
         while retry < self._max_retry_count:
             try:
                 resp = func(*args, **kwargs)
@@ -289,8 +338,9 @@ class DocumentDB:
 
         return resp
 
-    def _to_pd_dataframe(self, buffer, index_columns=None, columns=None,
-                         dtypes=None) -> pd.DataFrame:
+    def _to_pd_dataframe(
+        self, buffer, index_columns=None, columns=None, dtypes=None
+    ) -> pd.DataFrame:
         if len(buffer) > 0:
             table = self._to_arrow_table(buffer)
             df = table.to_pandas(split_blocks=True, self_destruct=True)
@@ -310,8 +360,9 @@ class DocumentDB:
 
         return df
 
-    def _to_pl_dataframe(self, buffer, columns=None,
-                         dtypes=None) -> pl.DataFrame:
+    def _to_pl_dataframe(
+        self, buffer, columns=None, dtypes=None
+    ) -> pl.DataFrame:
         if len(buffer) > 0:
             df = pl.read_parquet(io.BytesIO(buffer), columns=columns)
         else:

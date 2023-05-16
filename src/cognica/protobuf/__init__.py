@@ -1,5 +1,5 @@
 #
-# Appspand Cognica
+# Cognica
 #
-# Copyright (c) 2023 Appspand, Inc.
+# Copyright (c) 2023 Cognica, Inc.
 #

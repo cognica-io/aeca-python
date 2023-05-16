@@ -1,11 +1,12 @@
 //
-// Appspand Cognica
+// Cognica
 //
-// Copyright (c) 2023 Appspand, Inc.
+// Copyright (c) 2023 Cognica, Inc.
 //
 
 // protoc --cpp_out=. fts_analysis_pipeline.proto
-// protoc --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_cpp_plugin` fts_analysis_pipeline.proto
+// protoc --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_cpp_plugin`
+// fts_analysis_pipeline.proto
 
 syntax = "proto3";
 
@@ -13,31 +14,31 @@ package cognica.rpc.db.fts;
 
 option cc_enable_arenas = true;
 
-
 service FTSAnalysisPipelineService {
-    rpc execute(PipelineExecutionRequest) returns (PipelineExecutionResponse) {}
-    rpc execute_adhoc(AdhocPipelineExecutionRequest) returns (AdhocPipelineExecutionResponse) {}
+  rpc execute(PipelineExecutionRequest) returns (PipelineExecutionResponse) {}
+  rpc execute_adhoc(AdhocPipelineExecutionRequest)
+      returns (AdhocPipelineExecutionResponse) {}
 }
 
 message PipelineExecutionRequest {
-    string collection_name = 1;
-    string index_name = 2;
-    repeated string field_names = 3;
-    string query = 4;
+  string collection_name = 1;
+  string index_name = 2;
+  repeated string field_names = 3;
+  string query = 4;
 }
 
 message PipelineExecutionResponse {
-    int32 status = 1;
-    string result = 2;
+  int32 status = 1;
+  string result = 2;
 }
 
 message AdhocPipelineExecutionRequest {
-    string pipeline_def = 1;
-    repeated string field_names = 2;
-    string query = 3;
+  string pipeline_def = 1;
+  repeated string field_names = 2;
+  string query = 3;
 }
 
 message AdhocPipelineExecutionResponse {
-    int32 status = 1;
-    string result = 2;
+  int32 status = 1;
+  string result = 2;
 }

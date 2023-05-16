@@ -1,7 +1,7 @@
 #
-# Appspand Cognica
+# Cognica
 #
-# Copyright (c) 2023 Appspand, Inc.
+# Copyright (c) 2023 Cognica, Inc.
 #
 
 # pylint: disable=invalid-name
@@ -14,14 +14,18 @@ _CHANNEL_OPTIONS = [
     ("grpc.max_concurrent_streams", 4),
     ("grpc.max_send_message_length", -1),
     ("grpc.max_receive_message_length", -1),
-    ("grpc.http2.max_frame_size", 10 * 1024 * 1024),    # 10MB
+    ("grpc.http2.max_frame_size", 10 * 1024 * 1024),  # 10MB
 ]
 
 
 class Channel:
-    def __init__(self, host: str, port: int,
-                 options: list[tuple[str, int]] | None = None,
-                 use_ssl: bool = False):
+    def __init__(
+        self,
+        host: str,
+        port: int,
+        options: list[tuple[str, int]] | None = None,
+        use_ssl: bool = False,
+    ):
         self._host = host
         self._port = port
         if options is None:
@@ -61,9 +65,10 @@ class Channel:
             params = {}
 
         channel = ChannelFactory(
-            f"{self._host}:{self._port}", options=self._options,
+            f"{self._host}:{self._port}",
+            options=self._options,
             compression=grpc.Compression.Gzip,
-            **params
+            **params,
         )
 
         return channel
