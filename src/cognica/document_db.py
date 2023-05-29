@@ -18,6 +18,8 @@ import polars as pl
 import pyarrow as pa
 import pyarrow.parquet as pq
 
+from google.protobuf.json_format import MessageToDict
+
 from cognica.channel import Channel
 from cognica.protobuf import document_pb2, document_db_pb2, document_db_pb2_grpc
 
@@ -54,6 +56,12 @@ UpdateRequest: t.TypeAlias = messages.UpdateRequest  # type: ignore
 UpdateResponse: t.TypeAlias = messages.UpdateResponse  # type: ignore
 RemoveRequest: t.TypeAlias = messages.RemoveRequest  # type: ignore
 RemoveResponse: t.TypeAlias = messages.RemoveResponse  # type: ignore
+GetCollectionRequest: t.TypeAlias = (
+    messages.GetCollectionRequest  # type: ignore
+)
+GetCollectionResponse: t.TypeAlias = (
+    messages.GetCollectionResponse  # type: ignore
+)
 TruncateCollectionRequest: t.TypeAlias = (
     messages.TruncateCollectionRequest  # type: ignore
 )
@@ -185,7 +193,7 @@ class DocumentDB:
         resp: FindBatchResponse = self._invoke(
             self._stub.find_batch, batch_req, wait_for_ready=True
         )
-        for req, parquet_buffer in zip(requests, resp.buffers):
+        for req, parquet_buffer in zip(requests, resp.buffers):  # type: ignore
             if to_pandas:
                 df = self._to_pd_dataframe(
                     buffer=parquet_buffer.buffer,
@@ -246,6 +254,41 @@ class DocumentDB:
 
         self._invoke(self._stub.remove, req, wait_for_ready=True)
 
+    def get_collection(self, collection) -> t.Dict[str, t.Any]:
+        req = GetCollectionRequest(collection_name=collection)
+        resp: GetCollectionResponse = self._invoke(self._stub.get_collection,
+                                                   req, wait_for_ready=True)
+
+        return {
+            "success": resp.status == 0,
+            "message": resp.message,
+            "data": [
+                {
+                    "collection_name": resp.collection.collection_name,
+                    "primary_key": {
+                        "index_id": resp.collection.primary_key.index_id,
+                        "index_name": resp.collection.primary_key.index_name,
+                        "fields": list(resp.collection.primary_key.fields),
+                        "unique": resp.collection.primary_key.unique,
+                        "index_type": resp.collection.primary_key.index_type.name,
+                        "status": resp.collection.primary_key.status.name,
+                        "options": MessageToDict(resp.collection.primary_key.options),
+                    },
+                    "secondary_keys": [
+                        {
+                            "index_id": secondary_key.index_id,
+                            "index_name": secondary_key.index_name,
+                            "fields": list(secondary_key.fields),
+                            "unique": secondary_key.unique,
+                            "index_type": secondary_key.index_type.name,
+                            "status": secondary_key.status.name,
+                            "options": MessageToDict(secondary_key.options),
+                        } for secondary_key in collection.secondary_keys
+                    ]
+                }
+            ]
+        }
+
     def list_collections(self) -> t.List[str]:
         req = ListCollectionsRequest()
 
@@ -291,7 +334,8 @@ class DocumentDB:
     def get_index(
         self, collection, index_name
     ) -> t.List[t.Dict[str, t.Union[int, str]]]:
-        req = GetIndexRequest(collection_name=collection, index_name=index_name)
+        req = GetIndexRequest(collection_name=collection,
+                              index_name=index_name)
 
         index_infos = []
         resp: IndexDesc = self._invoke(

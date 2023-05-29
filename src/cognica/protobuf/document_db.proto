@@ -23,6 +23,10 @@ service DocumentDBService {
   rpc update(UpdateRequest) returns (UpdateResponse) {}
   rpc remove(RemoveRequest) returns (RemoveResponse) {}
 
+  rpc create_collection(CreateCollectionRequest)
+      returns (CreateCollectionResponse) {}
+  rpc drop_collection(DropCollectionRequest) returns (DropCollectionResponse) {}
+  rpc get_collection(GetCollectionRequest) returns (GetCollectionResponse) {}
   rpc list_collections(ListCollectionsRequest)
       returns (ListCollectionsResponse) {}
   rpc truncate_collection(TruncateCollectionRequest)
@@ -64,6 +68,34 @@ message IndexDesc {
   IndexType index_type = 5;
   IndexStatus status = 7;
   Document options = 8;
+}
+
+message CollectionInfo {
+  string collection_name = 1;
+  IndexDesc primary_key = 2;
+  repeated IndexDesc secondary_keys = 3;
+}
+
+message CreateCollectionRequest { CollectionInfo collection = 1; }
+
+message CreateCollectionResponse {
+  int32 status = 1;
+  string message = 2;
+}
+
+message DropCollectionRequest { string collection_name = 1; }
+
+message DropCollectionResponse {
+  int32 status = 1;
+  string message = 2;
+}
+
+message GetCollectionRequest { string collection_name = 1; }
+
+message GetCollectionResponse {
+  int32 status = 1;
+  string message = 2;
+  CollectionInfo collection = 3;
 }
 
 message CreateIndexRequest {

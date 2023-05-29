@@ -49,6 +49,21 @@ class DocumentDBServiceStub(object):
                 request_serializer=document__db__pb2.RemoveRequest.SerializeToString,
                 response_deserializer=document__db__pb2.RemoveResponse.FromString,
                 )
+        self.create_collection = channel.unary_unary(
+                '/cognica.rpc.db.document.DocumentDBService/create_collection',
+                request_serializer=document__db__pb2.CreateCollectionRequest.SerializeToString,
+                response_deserializer=document__db__pb2.CreateCollectionResponse.FromString,
+                )
+        self.drop_collection = channel.unary_unary(
+                '/cognica.rpc.db.document.DocumentDBService/drop_collection',
+                request_serializer=document__db__pb2.DropCollectionRequest.SerializeToString,
+                response_deserializer=document__db__pb2.DropCollectionResponse.FromString,
+                )
+        self.get_collection = channel.unary_unary(
+                '/cognica.rpc.db.document.DocumentDBService/get_collection',
+                request_serializer=document__db__pb2.GetCollectionRequest.SerializeToString,
+                response_deserializer=document__db__pb2.GetCollectionResponse.FromString,
+                )
         self.list_collections = channel.unary_unary(
                 '/cognica.rpc.db.document.DocumentDBService/list_collections',
                 request_serializer=document__db__pb2.ListCollectionsRequest.SerializeToString,
@@ -121,6 +136,24 @@ class DocumentDBServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def create_collection(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def drop_collection(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def get_collection(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def list_collections(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -188,6 +221,21 @@ def add_DocumentDBServiceServicer_to_server(servicer, server):
                     servicer.remove,
                     request_deserializer=document__db__pb2.RemoveRequest.FromString,
                     response_serializer=document__db__pb2.RemoveResponse.SerializeToString,
+            ),
+            'create_collection': grpc.unary_unary_rpc_method_handler(
+                    servicer.create_collection,
+                    request_deserializer=document__db__pb2.CreateCollectionRequest.FromString,
+                    response_serializer=document__db__pb2.CreateCollectionResponse.SerializeToString,
+            ),
+            'drop_collection': grpc.unary_unary_rpc_method_handler(
+                    servicer.drop_collection,
+                    request_deserializer=document__db__pb2.DropCollectionRequest.FromString,
+                    response_serializer=document__db__pb2.DropCollectionResponse.SerializeToString,
+            ),
+            'get_collection': grpc.unary_unary_rpc_method_handler(
+                    servicer.get_collection,
+                    request_deserializer=document__db__pb2.GetCollectionRequest.FromString,
+                    response_serializer=document__db__pb2.GetCollectionResponse.SerializeToString,
             ),
             'list_collections': grpc.unary_unary_rpc_method_handler(
                     servicer.list_collections,
@@ -340,6 +388,57 @@ class DocumentDBService(object):
         return grpc.experimental.unary_unary(request, target, '/cognica.rpc.db.document.DocumentDBService/remove',
             document__db__pb2.RemoveRequest.SerializeToString,
             document__db__pb2.RemoveResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def create_collection(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/cognica.rpc.db.document.DocumentDBService/create_collection',
+            document__db__pb2.CreateCollectionRequest.SerializeToString,
+            document__db__pb2.CreateCollectionResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def drop_collection(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/cognica.rpc.db.document.DocumentDBService/drop_collection',
+            document__db__pb2.DropCollectionRequest.SerializeToString,
+            document__db__pb2.DropCollectionResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def get_collection(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/cognica.rpc.db.document.DocumentDBService/get_collection',
+            document__db__pb2.GetCollectionRequest.SerializeToString,
+            document__db__pb2.GetCollectionResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
