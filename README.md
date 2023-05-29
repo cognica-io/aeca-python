@@ -2,9 +2,15 @@
 
 A Python client for Cognica database server.
 
+## Installation
+
+```bash
+$ pip install .
+```
+
 ## Current Status
 
-The features included in the current version are fully functional, however the API is still subject to change.
+The current version is fully functional and stable for the production environment. However, the API is still subject to change and may break backward compatibility in the next release.
 
 ### Current Version
 
