@@ -18,8 +18,6 @@ import polars as pl
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from google.protobuf.json_format import MessageToDict
-
 from cognica.channel import Channel
 from cognica.protobuf import document_pb2, document_db_pb2, document_db_pb2_grpc
 
@@ -256,8 +254,9 @@ class DocumentDB:
 
     def get_collection(self, collection) -> t.Dict[str, t.Any]:
         req = GetCollectionRequest(collection_name=collection)
-        resp: GetCollectionResponse = self._invoke(self._stub.get_collection,
-                                                   req, wait_for_ready=True)
+        resp: GetCollectionResponse = self._invoke(
+            self._stub.get_collection, req, wait_for_ready=True
+        )
 
         return {
             "success": resp.status == 0,
@@ -270,9 +269,11 @@ class DocumentDB:
                         "index_name": resp.collection.primary_key.index_name,
                         "fields": list(resp.collection.primary_key.fields),
                         "unique": resp.collection.primary_key.unique,
-                        "index_type": resp.collection.primary_key.index_type.name,
-                        "status": resp.collection.primary_key.status.name,
-                        "options": MessageToDict(resp.collection.primary_key.options),
+                        "index_type": resp.collection.primary_key.index_type,
+                        "status": resp.collection.primary_key.status,
+                        "options": json.loads(
+                            resp.collection.primary_key.options.json or "{}"
+                        ),
                     },
                     "secondary_keys": [
                         {
@@ -280,13 +281,16 @@ class DocumentDB:
                             "index_name": secondary_key.index_name,
                             "fields": list(secondary_key.fields),
                             "unique": secondary_key.unique,
-                            "index_type": secondary_key.index_type.name,
-                            "status": secondary_key.status.name,
-                            "options": MessageToDict(secondary_key.options),
-                        } for secondary_key in collection.secondary_keys
-                    ]
+                            "index_type": secondary_key.index_type,
+                            "status": secondary_key.status,
+                            "options": json.loads(
+                                secondary_key.options.json or "{}"
+                            ),
+                        }
+                        for secondary_key in resp.collection.secondary_keys
+                    ],
                 }
-            ]
+            ],
         }
 
     def list_collections(self) -> t.List[str]:
@@ -334,8 +338,7 @@ class DocumentDB:
     def get_index(
         self, collection, index_name
     ) -> t.List[t.Dict[str, t.Union[int, str]]]:
-        req = GetIndexRequest(collection_name=collection,
-                              index_name=index_name)
+        req = GetIndexRequest(collection_name=collection, index_name=index_name)
 
         index_infos = []
         resp: IndexDesc = self._invoke(
