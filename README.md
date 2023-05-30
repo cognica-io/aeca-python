@@ -5,7 +5,7 @@ A Python client for Cognica database server.
 ## Installation
 
 ```bash
-$ pip install .
+$ pip install cognica
 ```
 
 ## Current Status
