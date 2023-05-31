@@ -269,8 +269,12 @@ class DocumentDB:
                         "index_name": resp.collection.primary_key.index_name,
                         "fields": list(resp.collection.primary_key.fields),
                         "unique": resp.collection.primary_key.unique,
-                        "index_type": resp.collection.primary_key.index_type,
-                        "status": resp.collection.primary_key.status,
+                        "index_type": IndexType.Name(
+                            resp.collection.primary_key.index_type
+                        ),
+                        "status": IndexStatus.Name(
+                            resp.collection.primary_key.status
+                        ),
                         "options": json.loads(
                             resp.collection.primary_key.options.json or "{}"
                         ),
@@ -281,8 +285,10 @@ class DocumentDB:
                             "index_name": secondary_key.index_name,
                             "fields": list(secondary_key.fields),
                             "unique": secondary_key.unique,
-                            "index_type": secondary_key.index_type,
-                            "status": secondary_key.status,
+                            "index_type": IndexType.Name(
+                                secondary_key.index_type
+                            ),
+                            "status": IndexStatus.Name(secondary_key.status),
                             "options": json.loads(
                                 secondary_key.options.json or "{}"
                             ),
