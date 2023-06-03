@@ -76,11 +76,21 @@ message CollectionInfo {
   repeated IndexDesc secondary_keys = 3;
 }
 
+message ProfileInfo {
+  uint64 matched = 1;
+  uint64 scanned = 2;
+  uint64 filtered = 3;
+
+  uint64 query_duration_us = 4;
+  uint64 serialization_duration_us = 5;
+}
+
 message CreateCollectionRequest { CollectionInfo collection = 1; }
 
 message CreateCollectionResponse {
   int32 status = 1;
   string message = 2;
+  ProfileInfo profile = 3;
 }
 
 message DropCollectionRequest { string collection_name = 1; }
@@ -88,6 +98,7 @@ message DropCollectionRequest { string collection_name = 1; }
 message DropCollectionResponse {
   int32 status = 1;
   string message = 2;
+  ProfileInfo profile = 3;
 }
 
 message GetCollectionRequest { string collection_name = 1; }
@@ -96,6 +107,7 @@ message GetCollectionResponse {
   int32 status = 1;
   string message = 2;
   CollectionInfo collection = 3;
+  ProfileInfo profile = 4;
 }
 
 message CreateIndexRequest {
@@ -106,6 +118,7 @@ message CreateIndexRequest {
 message CreateIndexResponse {
   int32 status = 1;
   string message = 2;
+  ProfileInfo profile = 3;
 }
 
 message DropIndexRequest {
@@ -116,6 +129,7 @@ message DropIndexRequest {
 message DropIndexResponse {
   int32 status = 1;
   string message = 2;
+  ProfileInfo profile = 3;
 }
 
 message GetIndexRequest {
@@ -129,6 +143,8 @@ message GetIndexResponse {
 
   string collection_name = 3;
   IndexDesc index_desc = 4;
+
+  ProfileInfo profile = 5;
 }
 
 message Query {
@@ -148,6 +164,7 @@ message FindResponse {
   int32 num_columns = 1;
   int32 num_rows = 2;
   bytes buffer = 3;
+  ProfileInfo profile = 4;
 }
 
 message FindBatchRequest { repeated FindRequest requests = 1; }
@@ -160,6 +177,7 @@ message CountResponse {
   int32 status = 1;
   string message = 2;
   int64 count = 3;
+  ProfileInfo profile = 4;
 }
 
 message ContainsRequest { Query query = 1; }
@@ -168,6 +186,7 @@ message ContainsResponse {
   int32 status = 1;
   string message = 2;
   bool found = 3;
+  ProfileInfo profile = 4;
 }
 
 message InsertRequest { repeated Query requests = 1; }
@@ -175,6 +194,7 @@ message InsertRequest { repeated Query requests = 1; }
 message InsertResponse {
   int32 status = 1;
   string message = 2;
+  ProfileInfo profile = 3;
 }
 
 message UpdateRequest {
@@ -186,6 +206,7 @@ message UpdateRequest {
 message UpdateResponse {
   int32 status = 1;
   string message = 2;
+  ProfileInfo profile = 3;
 }
 
 message RemoveRequest { repeated Query requests = 1; }
@@ -193,6 +214,7 @@ message RemoveRequest { repeated Query requests = 1; }
 message RemoveResponse {
   int32 status = 1;
   string message = 2;
+  ProfileInfo profile = 3;
 }
 
 message TruncateCollectionRequest { string collection_name = 1; }
@@ -200,6 +222,7 @@ message TruncateCollectionRequest { string collection_name = 1; }
 message TruncateCollectionResponse {
   int32 status = 1;
   string message = 2;
+  ProfileInfo profile = 3;
 }
 
 message ListCollectionsRequest {}
@@ -208,4 +231,5 @@ message ListCollectionsResponse {
   int32 status = 1;
   string message = 2;
   repeated string collection_names = 3;
+  ProfileInfo profile = 4;
 }

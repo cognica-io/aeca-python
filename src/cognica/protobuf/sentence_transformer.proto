@@ -37,6 +37,8 @@ message Tensor {
   repeated float data = 2;
 }
 
+message ProfileInfo { uint64 duration_us = 1; }
+
 message SentenceEncoderRequest {
   string model_name = 1;
   repeated string sentences = 2;
@@ -46,6 +48,7 @@ message SentenceEncoderResponse {
   StatusType status = 1;
   string model_name = 2;
   repeated Tensor tensors = 3;
+  repeated ProfileInfo profiles = 4;
 }
 
 message SentencePair {
@@ -62,6 +65,7 @@ message CrossEncoderResponse {
   StatusType status = 1;
   string model_name = 2;
   repeated float scores = 3;
+  repeated ProfileInfo profiles = 4;
 }
 
 message CLIPEncoderRequest {
@@ -79,6 +83,7 @@ message CLIPEncoderResponse {
   StatusType status = 1;
   string model_name = 2;
   repeated Tensor tensors = 3;
+  repeated ProfileInfo profiles = 4;
 }
 
 message QAEncoderRequest {
@@ -101,4 +106,5 @@ message QAEncoderResponse {
   StatusType status = 1;
   string model_name = 2;
   repeated CandidateList answers = 3;
+  repeated ProfileInfo profiles = 4;
 }

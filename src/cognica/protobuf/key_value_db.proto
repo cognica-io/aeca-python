@@ -27,9 +27,12 @@ enum StatusType {
   kInternal = 10;
 }
 
+message ProfileInfo { uint64 duration_us = 1; }
+
 message Response {
   StatusType status = 1;
   string message = 2;
+  ProfileInfo profile = 3;
 }
 
 message PutRequest {

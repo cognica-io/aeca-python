@@ -22,7 +22,7 @@ setuptools.setup(
         "search engine",
         "database",
     ],
-    version="0.1.1",
+    version="0.1.2",
     packages=setuptools.find_namespace_packages(where="src"),
     package_dir={"": "src"},
     url="https://github.com/cognicadb/cognica-python",

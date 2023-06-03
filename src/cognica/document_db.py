@@ -5,6 +5,7 @@
 #
 
 # pylint: disable=no-member,missing-class-docstring,missing-function-docstring
+# pylint: disable=invalid-name,no-else-return
 
 import io
 import json
@@ -132,7 +133,13 @@ class DocumentDB:
         to_pandas=True,
         to_polars=False,
         to_arrow=False,
-    ) -> pd.DataFrame | pl.DataFrame | pa.Table:
+        enable_profile=False,
+    ) -> (
+        pd.DataFrame
+        | pl.DataFrame
+        | pa.Table
+        | tuple[pd.DataFrame | pl.DataFrame | pa.Table, dict]
+    ):
         if to_polars or to_arrow:
             to_pandas = False
 
@@ -161,13 +168,33 @@ class DocumentDB:
             df = self._to_arrow_table(buffer=resp.buffer, columns=columns)
         else:
             df = self._to_arrow_table(buffer=resp.buffer, columns=columns)
-        del resp
 
-        return df
+        if enable_profile:
+            profile = {
+                "duration": {
+                    "query": resp.profile.query_duration_us,
+                    "serialization": resp.profile.serialization_duration_us,
+                    "unit": "us",
+                }
+            }
+            del resp
+            return df, profile
+        else:
+            del resp
+            return df
 
     def find_batch(
-        self, requests, to_pandas=True, to_polars=False, to_arrow=False
-    ) -> list[pd.DataFrame] | list[pa.Table]:
+        self,
+        requests,
+        to_pandas=True,
+        to_polars=False,
+        to_arrow=False,
+        enable_profile=False,
+    ) -> (
+        list[pd.DataFrame]
+        | list[pa.Table]
+        | tuple[list[pd.DataFrame] | list[pa.Table], list[dict]]
+    ):
         if not requests:
             return []
 
@@ -188,33 +215,48 @@ class DocumentDB:
         batch_req = FindBatchRequest(requests=batch_items)
 
         dfs = []
+        profiles = []
         resp: FindBatchResponse = self._invoke(
             self._stub.find_batch, batch_req, wait_for_ready=True
         )
-        for req, parquet_buffer in zip(requests, resp.buffers):  # type: ignore
+        for req, response in zip(requests, resp.responses):  # type: ignore
             if to_pandas:
                 df = self._to_pd_dataframe(
-                    buffer=parquet_buffer.buffer,
+                    buffer=response.buffer,
                     index_columns=req.index_columns,
                     columns=req.columns,
                     dtypes=req.dtypes,
                 )
             elif to_polars:
                 df = self._to_pl_dataframe(
-                    buffer=resp.buffer, columns=req.columns
+                    buffer=response.buffer, columns=req.columns
                 )
             elif to_arrow:
                 df = self._to_arrow_table(
-                    buffer=resp.buffer, columns=req.columns
+                    buffer=response.buffer, columns=req.columns
                 )
             else:
                 df = self._to_arrow_table(
-                    buffer=parquet_buffer.buffer, columns=req.columns
+                    buffer=response.buffer, columns=req.columns
                 )
             dfs.append(df)
+            if enable_profile:
+                profile = {
+                    "duration": {
+                        "query": response.profile.query_duration_us,
+                        "serialization": (
+                            response.profile.serialization_duration_us
+                        ),
+                        "unit": "us",
+                    }
+                }
+                profiles.append(profile)
         del resp
 
-        return dfs
+        if enable_profile:
+            return dfs, profiles
+        else:
+            return dfs
 
     def insert(self, collection, docs) -> None:
         if not isinstance(docs, list):
