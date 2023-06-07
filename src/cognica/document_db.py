@@ -29,7 +29,7 @@ DocumentDBServiceStub = document_db_pb2_grpc.DocumentDBServiceStub
 
 IndexType: t.TypeAlias = messages.IndexType  # type: ignore
 IndexStatus: t.TypeAlias = messages.IndexStatus  # type: ignore
-IndexDesc: t.TypeAlias = messages.IndexDesc  # type: ignore
+IndexDescriptor: t.TypeAlias = messages.IndexDescriptor  # type: ignore
 CreateIndexRequest: t.TypeAlias = messages.CreateIndexRequest  # type: ignore
 CreateIndexResponse: t.TypeAlias = messages.CreateIndexResponse  # type: ignore
 DropIndexRequest: t.TypeAlias = messages.DropIndexRequest  # type: ignore
@@ -357,7 +357,7 @@ class DocumentDB:
         if options is not None:
             options = _to_json(options)
 
-        index_desc = IndexDesc(
+        index_desc = IndexDescriptor(
             index_id=0,
             index_name=index_name,
             fields=fields,
