@@ -46,3 +46,6 @@ classifiers = [
 
 [project.urls]
 "Homepage" = "https://www.cognica.io"
+
+[tool.black]
+line-length = 80
