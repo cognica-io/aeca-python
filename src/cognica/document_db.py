@@ -55,24 +55,16 @@ UpdateRequest: t.TypeAlias = messages.UpdateRequest  # type: ignore
 UpdateResponse: t.TypeAlias = messages.UpdateResponse  # type: ignore
 RemoveRequest: t.TypeAlias = messages.RemoveRequest  # type: ignore
 RemoveResponse: t.TypeAlias = messages.RemoveResponse  # type: ignore
-GetCollectionRequest: t.TypeAlias = (
-    messages.GetCollectionRequest  # type: ignore
-)
-GetCollectionResponse: t.TypeAlias = (
-    messages.GetCollectionResponse  # type: ignore
-)
+GetCollectionRequest: t.TypeAlias = messages.GetCollectionRequest  # type: ignore
+GetCollectionResponse: t.TypeAlias = messages.GetCollectionResponse  # type: ignore
 TruncateCollectionRequest: t.TypeAlias = (
     messages.TruncateCollectionRequest  # type: ignore
 )
 TruncateCollectionResponse: t.TypeAlias = (
     messages.TruncateCollectionResponse  # type: ignore
 )
-ListCollectionsRequest: t.TypeAlias = (
-    messages.ListCollectionsRequest  # type: ignore
-)
-ListCollectionsResponse: t.TypeAlias = (
-    messages.ListCollectionsResponse  # type: ignore
-)
+ListCollectionsRequest: t.TypeAlias = messages.ListCollectionsRequest  # type: ignore
+ListCollectionsResponse: t.TypeAlias = messages.ListCollectionsResponse  # type: ignore
 
 
 def _to_json(doc):
@@ -306,36 +298,38 @@ class DocumentDB:
             "data": [
                 {
                     "collection_name": resp.collection.collection_name,
-                    "primary_key": {
-                        "index_id": resp.collection.primary_key.index_id,
-                        "index_name": resp.collection.primary_key.index_name,
-                        "fields": list(resp.collection.primary_key.fields),
-                        "unique": resp.collection.primary_key.unique,
-                        "index_type": IndexType.Name(
-                            resp.collection.primary_key.index_type
-                        ),
-                        "status": IndexStatus.Name(
-                            resp.collection.primary_key.status
-                        ),
-                        "options": json.loads(
-                            resp.collection.primary_key.options.json or "{}"
-                        ),
-                    },
-                    "secondary_keys": [
+                    "index_descriptors": [
                         {
-                            "index_id": secondary_key.index_id,
-                            "index_name": secondary_key.index_name,
-                            "fields": list(secondary_key.fields),
-                            "unique": secondary_key.unique,
-                            "index_type": IndexType.Name(
-                                secondary_key.index_type
-                            ),
-                            "status": IndexStatus.Name(secondary_key.status),
+                            "index_id": index_desc.index_id,
+                            "index_name": index_desc.index_name,
+                            "fields": list(index_desc.fields),
+                            "unique": index_desc.unique,
+                            "index_type": IndexType.Name(index_desc.index_type),
+                            "status": IndexStatus.Name(index_desc.status),
                             "options": json.loads(
-                                secondary_key.options.json or "{}"
+                                index_desc.options.json or "{}"
                             ),
                         }
-                        for secondary_key in resp.collection.secondary_keys
+                        for index_desc in resp.collection.index_descriptors
+                    ],
+                    "index_stats": [
+                        {
+                            "index_id": index_stats.index_id,
+                            "index_name": index_stats.index_name,
+                            "approximated_size": index_stats.approximated_size,
+                            "num_docs": index_stats.num_docs,
+                            "accessed": index_stats.accessed,
+                            "added": index_stats.added,
+                            "updated": index_stats.updated,
+                            "deleted": index_stats.deleted,
+                            "merged": index_stats.merged,
+                            "accessed_at": index_stats.accessed_at,
+                            "added_at": index_stats.added_at,
+                            "updated_at": index_stats.updated_at,
+                            "deleted_at": index_stats.deleted_at,
+                            "merged_at": index_stats.merged_at,
+                        }
+                        for index_stats in resp.collection.index_stats
                     ],
                 }
             ],
@@ -383,29 +377,48 @@ class DocumentDB:
         )
         self._invoke(self._stub.drop_index, req, wait_for_ready=True)
 
-    def get_index(
-        self, collection, index_name
-    ) -> t.List[t.Dict[str, t.Union[int, str]]]:
+    def get_index(self, collection, index_name) -> t.Dict[str, t.Any]:
         req = GetIndexRequest(collection_name=collection, index_name=index_name)
-
-        index_infos = []
-        resp: IndexDesc = self._invoke(
+        resp: GetIndexResponse = self._invoke(
             self._stub.get_index, req, wait_for_ready=True
         )
         index_desc = resp.index_desc
-        index_infos.append(
-            {
-                "index_id": index_desc.index_id,
-                "index_name": index_desc.index_name,
-                "fields": list(index_desc.fields),
-                "unique": index_desc.unique,
-                "index_type": index_desc.index_type,
-                "status": index_desc.status,
-                "options": str(index_desc.options),
-            }
-        )
+        index_stats = resp.index_stats
 
-        return index_infos
+        return {
+            "success": resp.status == 0,
+            "message": resp.message,
+            "data": [
+                {
+                    "collection_name": resp.collection_name,
+                    "index_descriptor": {
+                        "index_id": index_desc.index_id,
+                        "index_name": index_desc.index_name,
+                        "fields": list(index_desc.fields),
+                        "unique": index_desc.unique,
+                        "index_type": IndexType.Name(index_desc.index_type),
+                        "status": IndexStatus.Name(index_desc.status),
+                        "options": json.loads(index_desc.options.json or "{}"),
+                    },
+                    "index_stats": {
+                        "index_id": index_stats.index_id,
+                        "index_name": index_stats.index_name,
+                        "approximated_size": index_stats.approximated_size,
+                        "num_docs": index_stats.num_docs,
+                        "accessed": index_stats.accessed,
+                        "added": index_stats.added,
+                        "updated": index_stats.updated,
+                        "deleted": index_stats.deleted,
+                        "merged": index_stats.merged,
+                        "accessed_at": index_stats.accessed_at,
+                        "added_at": index_stats.added_at,
+                        "updated_at": index_stats.updated_at,
+                        "deleted_at": index_stats.deleted_at,
+                        "merged_at": index_stats.merged_at,
+                    },
+                }
+            ],
+        }
 
     def empty(self, collection, query, dtypes=None) -> bool:
         df = self.find(collection, query, dtypes=dtypes, limit=1)
