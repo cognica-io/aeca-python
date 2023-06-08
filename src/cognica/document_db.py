@@ -292,45 +292,70 @@ class DocumentDB:
             self._stub.get_collection, req, wait_for_ready=True
         )
 
+        index_desc_list = []
+        for resp_index_desc in resp.collection.index_descriptors:
+            index_desc = {
+                "index_id": resp_index_desc.index_id,
+                "index_name": resp_index_desc.index_name,
+                "fields": list(resp_index_desc.fields),
+                "unique": resp_index_desc.unique,
+                "index_type": IndexType.Name(resp_index_desc.index_type),
+                "status": IndexStatus.Name(resp_index_desc.status),
+                "options": json.loads(resp_index_desc.options.json or "{}"),
+            }
+            index_desc_list.append(index_desc)
+
+        index_stats_list = []
+        for index, resp_index_desc in enumerate(
+            resp.collection.index_descriptors
+        ):
+            resp_index_stats = resp.collection.index_stats[index]
+            index_stats = {
+                "index_id": resp_index_stats.index_id,
+                "index_name": resp_index_stats.index_name,
+                "approximated_size": resp_index_stats.approximated_size,
+                "num_docs": resp_index_stats.num_docs,
+                "accessed": resp_index_stats.accessed,
+                "added": resp_index_stats.added,
+                "updated": resp_index_stats.updated,
+                "deleted": resp_index_stats.deleted,
+                "merged": resp_index_stats.merged,
+                "accessed_at": resp_index_stats.accessed_at,
+                "added_at": resp_index_stats.added_at,
+                "updated_at": resp_index_stats.updated_at,
+                "deleted_at": resp_index_stats.deleted_at,
+                "merged_at": resp_index_stats.merged_at,
+            }
+
+            if resp_index_desc.index_type == IndexType.kFullTextSearchIndex:
+                resp_fts_stats = resp.collection.fts_stats
+                fts_stats = {
+                    "doc_count": resp_fts_stats.doc_count,
+                    "doc_size": resp_fts_stats.doc_size,
+                    "field_stats": [
+                        {
+                            "field_name": field_stats.field_name,
+                            "total_doc_count": field_stats.total_doc_count,
+                            "total_doc_size": field_stats.total_doc_size,
+                            "doc_count": field_stats.doc_count,
+                            "doc_size": field_stats.doc_size,
+                            "sum_term_freq": field_stats.sum_term_freq,
+                            "sum_doc_freq": field_stats.sum_doc_freq,
+                        }
+                        for field_stats in resp_fts_stats.field_stats
+                    ],
+                }
+                index_stats["fts_stats"] = fts_stats
+            index_stats_list.append(index_stats)
+
         return {
             "success": resp.status == 0,
             "message": resp.message,
             "data": [
                 {
                     "collection_name": resp.collection.collection_name,
-                    "index_descriptors": [
-                        {
-                            "index_id": index_desc.index_id,
-                            "index_name": index_desc.index_name,
-                            "fields": list(index_desc.fields),
-                            "unique": index_desc.unique,
-                            "index_type": IndexType.Name(index_desc.index_type),
-                            "status": IndexStatus.Name(index_desc.status),
-                            "options": json.loads(
-                                index_desc.options.json or "{}"
-                            ),
-                        }
-                        for index_desc in resp.collection.index_descriptors
-                    ],
-                    "index_stats": [
-                        {
-                            "index_id": index_stats.index_id,
-                            "index_name": index_stats.index_name,
-                            "approximated_size": index_stats.approximated_size,
-                            "num_docs": index_stats.num_docs,
-                            "accessed": index_stats.accessed,
-                            "added": index_stats.added,
-                            "updated": index_stats.updated,
-                            "deleted": index_stats.deleted,
-                            "merged": index_stats.merged,
-                            "accessed_at": index_stats.accessed_at,
-                            "added_at": index_stats.added_at,
-                            "updated_at": index_stats.updated_at,
-                            "deleted_at": index_stats.deleted_at,
-                            "merged_at": index_stats.merged_at,
-                        }
-                        for index_stats in resp.collection.index_stats
-                    ],
+                    "index_descriptors": index_desc_list,
+                    "index_stats": index_stats_list,
                 }
             ],
         }
@@ -382,8 +407,51 @@ class DocumentDB:
         resp: GetIndexResponse = self._invoke(
             self._stub.get_index, req, wait_for_ready=True
         )
-        index_desc = resp.index_desc
-        index_stats = resp.index_stats
+
+        index_desc = {
+            "index_id": resp.index_desc.index_id,
+            "index_name": resp.index_desc.index_name,
+            "fields": list(resp.index_desc.fields),
+            "unique": resp.index_desc.unique,
+            "index_type": IndexType.Name(resp.index_desc.index_type),
+            "status": IndexStatus.Name(resp.index_desc.status),
+            "options": json.loads(resp.index_desc.options.json or "{}"),
+        }
+        index_stats = {
+            "index_id": resp.index_stats.index_id,
+            "index_name": resp.index_stats.index_name,
+            "approximated_size": resp.index_stats.approximated_size,
+            "num_docs": resp.index_stats.num_docs,
+            "accessed": resp.index_stats.accessed,
+            "added": resp.index_stats.added,
+            "updated": resp.index_stats.updated,
+            "deleted": resp.index_stats.deleted,
+            "merged": resp.index_stats.merged,
+            "accessed_at": resp.index_stats.accessed_at,
+            "added_at": resp.index_stats.added_at,
+            "updated_at": resp.index_stats.updated_at,
+            "deleted_at": resp.index_stats.deleted_at,
+            "merged_at": resp.index_stats.merged_at,
+        }
+        if resp.index_desc.index_type == IndexType.kFullTextSearchIndex:
+            resp_fts_stats = resp.collection.fts_stats
+            fts_stats = {
+                "doc_count": resp_fts_stats.doc_count,
+                "doc_size": resp_fts_stats.doc_size,
+                "field_stats": [
+                    {
+                        "field_name": field_stats.field_name,
+                        "total_doc_count": field_stats.total_doc_count,
+                        "total_doc_size": field_stats.total_doc_size,
+                        "doc_count": field_stats.doc_count,
+                        "doc_size": field_stats.doc_size,
+                        "sum_term_freq": field_stats.sum_term_freq,
+                        "sum_doc_freq": field_stats.sum_doc_freq,
+                    }
+                    for field_stats in resp_fts_stats.field_stats
+                ],
+            }
+            index_stats["fts_stats"] = fts_stats
 
         return {
             "success": resp.status == 0,
@@ -391,31 +459,8 @@ class DocumentDB:
             "data": [
                 {
                     "collection_name": resp.collection_name,
-                    "index_descriptor": {
-                        "index_id": index_desc.index_id,
-                        "index_name": index_desc.index_name,
-                        "fields": list(index_desc.fields),
-                        "unique": index_desc.unique,
-                        "index_type": IndexType.Name(index_desc.index_type),
-                        "status": IndexStatus.Name(index_desc.status),
-                        "options": json.loads(index_desc.options.json or "{}"),
-                    },
-                    "index_stats": {
-                        "index_id": index_stats.index_id,
-                        "index_name": index_stats.index_name,
-                        "approximated_size": index_stats.approximated_size,
-                        "num_docs": index_stats.num_docs,
-                        "accessed": index_stats.accessed,
-                        "added": index_stats.added,
-                        "updated": index_stats.updated,
-                        "deleted": index_stats.deleted,
-                        "merged": index_stats.merged,
-                        "accessed_at": index_stats.accessed_at,
-                        "added_at": index_stats.added_at,
-                        "updated_at": index_stats.updated_at,
-                        "deleted_at": index_stats.deleted_at,
-                        "merged_at": index_stats.merged_at,
-                    },
+                    "index_descriptor": index_desc,
+                    "index_stats": index_stats,
                 }
             ],
         }
