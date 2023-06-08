@@ -328,7 +328,7 @@ class DocumentDB:
             }
 
             if resp_index_desc.index_type == IndexType.kFullTextSearchIndex:
-                resp_fts_stats = resp.collection.fts_stats
+                resp_fts_stats = resp_index_stats.fts_stats
                 fts_stats = {
                     "doc_count": resp_fts_stats.doc_count,
                     "doc_size": resp_fts_stats.doc_size,
@@ -434,7 +434,7 @@ class DocumentDB:
             "merged_at": resp.index_stats.merged_at,
         }
         if resp.index_desc.index_type == IndexType.kFullTextSearchIndex:
-            resp_fts_stats = resp.collection.fts_stats
+            resp_fts_stats = resp.index_stats.fts_stats
             fts_stats = {
                 "doc_count": resp_fts_stats.doc_count,
                 "doc_size": resp_fts_stats.doc_size,
