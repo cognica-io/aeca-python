@@ -57,6 +57,8 @@ RemoveRequest: t.TypeAlias = messages.RemoveRequest  # type: ignore
 RemoveResponse: t.TypeAlias = messages.RemoveResponse  # type: ignore
 GetCollectionRequest: t.TypeAlias = messages.GetCollectionRequest  # type: ignore
 GetCollectionResponse: t.TypeAlias = messages.GetCollectionResponse  # type: ignore
+GetCollectionsRequest: t.TypeAlias = messages.GetCollectionsRequest  # type: ignore
+GetCollectionsResponse: t.TypeAlias = messages.GetCollectionsResponse  # type: ignore
 TruncateCollectionRequest: t.TypeAlias = (
     messages.TruncateCollectionRequest  # type: ignore
 )
@@ -351,6 +353,13 @@ class DocumentDB:
         return {
             "success": resp.status == 0,
             "message": resp.message,
+            "profile": {
+                "duration": {
+                    "query": resp.profile.query_duration_us,
+                    "serialization": resp.profile.serialization_duration_us,
+                    "unit": "us",
+                }
+            },
             "data": [
                 {
                     "collection_name": resp.collection.collection_name,
@@ -358,6 +367,90 @@ class DocumentDB:
                     "index_stats": index_stats_list,
                 }
             ],
+        }
+
+    def get_collections(self, collections) -> t.Dict[str, t.Any]:
+        req = GetCollectionsRequest(collection_names=collections)
+        resp: GetCollectionsResponse = self._invoke(
+            self._stub.get_collections, req, wait_for_ready=True
+        )
+
+        collection_infos = []
+        for resp_collection_info in resp.collections:
+            index_desc_list = []
+            for resp_index_desc in resp_collection_info.index_descriptors:
+                index_desc = {
+                    "index_id": resp_index_desc.index_id,
+                    "index_name": resp_index_desc.index_name,
+                    "fields": list(resp_index_desc.fields),
+                    "unique": resp_index_desc.unique,
+                    "index_type": IndexType.Name(resp_index_desc.index_type),
+                    "status": IndexStatus.Name(resp_index_desc.status),
+                    "options": json.loads(resp_index_desc.options.json or "{}"),
+                }
+                index_desc_list.append(index_desc)
+
+            index_stats_list = []
+            for index, resp_index_desc in enumerate(
+                resp_collection_info.index_descriptors
+            ):
+                resp_index_stats = resp_collection_info.index_stats[index]
+                index_stats = {
+                    "index_id": resp_index_stats.index_id,
+                    "index_name": resp_index_stats.index_name,
+                    "approximated_size": resp_index_stats.approximated_size,
+                    "num_docs": resp_index_stats.num_docs,
+                    "accessed": resp_index_stats.accessed,
+                    "added": resp_index_stats.added,
+                    "updated": resp_index_stats.updated,
+                    "deleted": resp_index_stats.deleted,
+                    "merged": resp_index_stats.merged,
+                    "accessed_at": resp_index_stats.accessed_at,
+                    "added_at": resp_index_stats.added_at,
+                    "updated_at": resp_index_stats.updated_at,
+                    "deleted_at": resp_index_stats.deleted_at,
+                    "merged_at": resp_index_stats.merged_at,
+                }
+
+                if resp_index_desc.index_type == IndexType.kFullTextSearchIndex:
+                    resp_fts_stats = resp_index_stats.fts_stats
+                    fts_stats = {
+                        "doc_count": resp_fts_stats.doc_count,
+                        "doc_size": resp_fts_stats.doc_size,
+                        "field_stats": [
+                            {
+                                "field_name": field_stats.field_name,
+                                "total_doc_count": field_stats.total_doc_count,
+                                "total_doc_size": field_stats.total_doc_size,
+                                "doc_count": field_stats.doc_count,
+                                "doc_size": field_stats.doc_size,
+                                "sum_term_freq": field_stats.sum_term_freq,
+                                "sum_doc_freq": field_stats.sum_doc_freq,
+                            }
+                            for field_stats in resp_fts_stats.field_stats
+                        ],
+                    }
+                    index_stats["fts_stats"] = fts_stats
+                index_stats_list.append(index_stats)
+            collection_infos.append(
+                {
+                    "collection_name": resp_collection_info.collection_name,
+                    "index_descriptors": index_desc_list,
+                    "index_stats": index_stats_list,
+                }
+            )
+
+        return {
+            "success": resp.status == 0,
+            "message": resp.message,
+            "profile": {
+                "duration": {
+                    "query": resp.profile.query_duration_us,
+                    "serialization": resp.profile.serialization_duration_us,
+                    "unit": "us",
+                }
+            },
+            "data": collection_infos,
         }
 
     def list_collections(self) -> t.List[str]:
@@ -456,6 +549,13 @@ class DocumentDB:
         return {
             "success": resp.status == 0,
             "message": resp.message,
+            "profile": {
+                "duration": {
+                    "query": resp.profile.query_duration_us,
+                    "serialization": resp.profile.serialization_duration_us,
+                    "unit": "us",
+                }
+            },
             "data": [
                 {
                     "collection_name": resp.collection_name,

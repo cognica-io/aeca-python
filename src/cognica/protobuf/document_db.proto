@@ -27,6 +27,7 @@ service DocumentDBService {
       returns (CreateCollectionResponse) {}
   rpc drop_collection(DropCollectionRequest) returns (DropCollectionResponse) {}
   rpc get_collection(GetCollectionRequest) returns (GetCollectionResponse) {}
+  rpc get_collections(GetCollectionsRequest) returns (GetCollectionsResponse) {}
   rpc list_collections(ListCollectionsRequest)
       returns (ListCollectionsResponse) {}
   rpc truncate_collection(TruncateCollectionRequest)
@@ -146,6 +147,15 @@ message GetCollectionResponse {
   int32 status = 1;
   string message = 2;
   CollectionInfo collection = 3;
+  ProfileInfo profile = 4;
+}
+
+message GetCollectionsRequest { repeated string collection_names = 1; }
+
+message GetCollectionsResponse {
+  int32 status = 1;
+  string message = 2;
+  repeated CollectionInfo collections = 3;
   ProfileInfo profile = 4;
 }
 
