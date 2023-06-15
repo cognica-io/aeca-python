@@ -59,6 +59,10 @@ GetCollectionRequest: t.TypeAlias = messages.GetCollectionRequest  # type: ignor
 GetCollectionResponse: t.TypeAlias = messages.GetCollectionResponse  # type: ignore
 GetCollectionsRequest: t.TypeAlias = messages.GetCollectionsRequest  # type: ignore
 GetCollectionsResponse: t.TypeAlias = messages.GetCollectionsResponse  # type: ignore
+CreateCollectionRequest: t.TypeAlias = messages.CreateCollectionRequest  # type: ignore
+CreateCollectionResponse: t.TypeAlias = messages.CreateCollectionResponse  # type: ignore
+DropCollectionRequest: t.TypeAlias = messages.DropCollectionRequest  # type: ignore
+DropCollectionResponse: t.TypeAlias = messages.DropCollectionResponse  # type: ignore
 TruncateCollectionRequest: t.TypeAlias = (
     messages.TruncateCollectionRequest  # type: ignore
 )
@@ -464,6 +468,13 @@ class DocumentDB:
             collection_names.append(name)
 
         return collection_names
+
+    def create_collection(self, collection, indexes) -> None:
+        pass
+
+    def drop_collection(self, collection) -> None:
+        req = DropCollectionRequest(collection_name=collection)
+        self._invoke(self._stub.drop_collection, req, wait_for_ready=True)
 
     def truncate_collection(self, collection) -> None:
         req = TruncateCollectionRequest(collection_name=collection)
