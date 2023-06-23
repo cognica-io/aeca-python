@@ -30,6 +30,7 @@ DocumentDBServiceStub = document_db_pb2_grpc.DocumentDBServiceStub
 IndexType: t.TypeAlias = messages.IndexType  # type: ignore
 IndexStatus: t.TypeAlias = messages.IndexStatus  # type: ignore
 IndexDescriptor: t.TypeAlias = messages.IndexDescriptor  # type: ignore
+IndexStats: t.TypeAlias = messages.IndexStats  # type: ignore
 CreateIndexRequest: t.TypeAlias = messages.CreateIndexRequest  # type: ignore
 CreateIndexResponse: t.TypeAlias = messages.CreateIndexResponse  # type: ignore
 DropIndexRequest: t.TypeAlias = messages.DropIndexRequest  # type: ignore
@@ -55,6 +56,8 @@ UpdateRequest: t.TypeAlias = messages.UpdateRequest  # type: ignore
 UpdateResponse: t.TypeAlias = messages.UpdateResponse  # type: ignore
 RemoveRequest: t.TypeAlias = messages.RemoveRequest  # type: ignore
 RemoveResponse: t.TypeAlias = messages.RemoveResponse  # type: ignore
+
+CollectionInfo: t.TypeAlias = messages.CollectionInfo  # type: ignore
 GetCollectionRequest: t.TypeAlias = messages.GetCollectionRequest  # type: ignore
 GetCollectionResponse: t.TypeAlias = messages.GetCollectionResponse  # type: ignore
 GetCollectionsRequest: t.TypeAlias = messages.GetCollectionsRequest  # type: ignore
@@ -367,8 +370,8 @@ class DocumentDB:
             "data": [
                 {
                     "collection_name": resp.collection.collection_name,
-                    "index_descriptors": index_desc_list,
-                    "index_stats": index_stats_list,
+                    "indexes": index_desc_list,
+                    "statistics": index_stats_list,
                 }
             ],
         }
@@ -439,8 +442,8 @@ class DocumentDB:
             collection_infos.append(
                 {
                     "collection_name": resp_collection_info.collection_name,
-                    "index_descriptors": index_desc_list,
-                    "index_stats": index_stats_list,
+                    "indexes": index_desc_list,
+                    "statistics": index_stats_list,
                 }
             )
 
@@ -469,8 +472,34 @@ class DocumentDB:
 
         return collection_names
 
-    def create_collection(self, collection, indexes) -> None:
-        pass
+    def create_collection(
+        self, collection: str, indexes: list[dict[str, object]]
+    ) -> None:
+        index_descs = []
+        for index_desc in indexes:
+            index_id = index_desc.get("index_id", 0)
+            index_name = index_desc.get("index_name")
+            fields = index_desc.get("fields")
+            unique = index_desc.get("unique")
+            index_type = index_desc.get("index_type")
+            status = index_desc.get("status")
+            options = index_desc.get("options", {})
+            index_descs.append(
+                IndexDescriptor(
+                    index_id=index_id,
+                    index_name=index_name,
+                    fields=fields,
+                    unique=unique,
+                    index_type=index_type,
+                    status=status,
+                    options=_to_json(options),
+                )
+            )
+        collection_info = CollectionInfo(
+            collection_name=collection, index_descriptors=index_descs
+        )
+        req = CreateCollectionRequest(collection=collection_info)
+        self._invoke(self._stub.create_collection, req, wait_for_ready=True)
 
     def drop_collection(self, collection) -> None:
         req = DropCollectionRequest(collection_name=collection)
@@ -570,8 +599,8 @@ class DocumentDB:
             "data": [
                 {
                     "collection_name": resp.collection_name,
-                    "index_descriptor": index_desc,
-                    "index_stats": index_stats,
+                    "indexes": index_desc,
+                    "statistics": index_stats,
                 }
             ],
         }
