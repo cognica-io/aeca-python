@@ -26,6 +26,8 @@ service DocumentDBService {
   rpc create_collection(CreateCollectionRequest)
       returns (CreateCollectionResponse) {}
   rpc drop_collection(DropCollectionRequest) returns (DropCollectionResponse) {}
+  rpc rename_collection(RenameCollectionRequest)
+      returns (RenameCollectionResponse) {}
   rpc get_collection(GetCollectionRequest) returns (GetCollectionResponse) {}
   rpc get_collections(GetCollectionsRequest) returns (GetCollectionsResponse) {}
   rpc list_collections(ListCollectionsRequest)
@@ -35,6 +37,7 @@ service DocumentDBService {
 
   rpc create_index(CreateIndexRequest) returns (CreateIndexResponse) {}
   rpc drop_index(DropIndexRequest) returns (DropIndexResponse) {}
+  rpc rename_index(RenameIndexRequest) returns (RenameIndexResponse) {}
   rpc get_index(GetIndexRequest) returns (GetIndexResponse) {}
 }
 
@@ -141,6 +144,17 @@ message DropCollectionResponse {
   ProfileInfo profile = 3;
 }
 
+message RenameCollectionRequest {
+  string old_collection_name = 1;
+  string new_collection_name = 2;
+}
+
+message RenameCollectionResponse {
+  int32 status = 1;
+  string message = 2;
+  ProfileInfo profile = 3;
+}
+
 message GetCollectionRequest { string collection_name = 1; }
 
 message GetCollectionResponse {
@@ -176,6 +190,18 @@ message DropIndexRequest {
 }
 
 message DropIndexResponse {
+  int32 status = 1;
+  string message = 2;
+  ProfileInfo profile = 3;
+}
+
+message RenameIndexRequest {
+  string collection_name = 1;
+  string old_index_name = 2;
+  string new_index_name = 3;
+}
+
+message RenameIndexResponse {
   int32 status = 1;
   string message = 2;
   ProfileInfo profile = 3;

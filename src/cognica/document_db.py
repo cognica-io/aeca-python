@@ -35,6 +35,8 @@ CreateIndexRequest: t.TypeAlias = messages.CreateIndexRequest  # type: ignore
 CreateIndexResponse: t.TypeAlias = messages.CreateIndexResponse  # type: ignore
 DropIndexRequest: t.TypeAlias = messages.DropIndexRequest  # type: ignore
 DropIndexResponse: t.TypeAlias = messages.DropIndexResponse  # type: ignore
+RenameIndexRequest: t.TypeAlias = messages.RenameIndexRequest  # type: ignore
+RenameIndexResponse: t.TypeAlias = messages.RenameIndexResponse  # type: ignore
 GetIndexRequest: t.TypeAlias = messages.GetIndexRequest  # type: ignore
 GetIndexResponse: t.TypeAlias = messages.GetIndexResponse  # type: ignore
 
@@ -66,6 +68,8 @@ CreateCollectionRequest: t.TypeAlias = messages.CreateCollectionRequest  # type:
 CreateCollectionResponse: t.TypeAlias = messages.CreateCollectionResponse  # type: ignore
 DropCollectionRequest: t.TypeAlias = messages.DropCollectionRequest  # type: ignore
 DropCollectionResponse: t.TypeAlias = messages.DropCollectionResponse  # type: ignore
+RenameCollectionRequest: t.TypeAlias = messages.RenameCollectionRequest  # type: ignore
+RenameCollectionResponse: t.TypeAlias = messages.RenameCollectionResponse  # type: ignore
 TruncateCollectionRequest: t.TypeAlias = (
     messages.TruncateCollectionRequest  # type: ignore
 )
@@ -505,6 +509,12 @@ class DocumentDB:
         req = DropCollectionRequest(collection_name=collection)
         self._invoke(self._stub.drop_collection, req, wait_for_ready=True)
 
+    def rename_collection(self, old_name, new_name) -> None:
+        req = RenameCollectionRequest(
+            old_collection_name=old_name, new_collection_name=new_name
+        )
+        self._invoke(self._stub.rename_collection, req, wait_for_ready=True)
+
     def truncate_collection(self, collection) -> None:
         req = TruncateCollectionRequest(collection_name=collection)
         self._invoke(self._stub.truncate_collection, req, wait_for_ready=True)
@@ -534,6 +544,14 @@ class DocumentDB:
             collection_name=collection, index_name=index_name
         )
         self._invoke(self._stub.drop_index, req, wait_for_ready=True)
+
+    def rename_index(self, collection, old_name, new_name) -> None:
+        req = RenameIndexRequest(
+            collection_name=collection,
+            old_index_name=old_name,
+            new_index_name=new_name,
+        )
+        self._invoke(self._stub.rename_index, req, wait_for_ready=True)
 
     def get_index(self, collection, index_name) -> t.Dict[str, t.Any]:
         req = GetIndexRequest(collection_name=collection, index_name=index_name)

@@ -59,6 +59,11 @@ class DocumentDBServiceStub(object):
                 request_serializer=document__db__pb2.DropCollectionRequest.SerializeToString,
                 response_deserializer=document__db__pb2.DropCollectionResponse.FromString,
                 )
+        self.rename_collection = channel.unary_unary(
+                '/cognica.rpc.db.document.DocumentDBService/rename_collection',
+                request_serializer=document__db__pb2.RenameCollectionRequest.SerializeToString,
+                response_deserializer=document__db__pb2.RenameCollectionResponse.FromString,
+                )
         self.get_collection = channel.unary_unary(
                 '/cognica.rpc.db.document.DocumentDBService/get_collection',
                 request_serializer=document__db__pb2.GetCollectionRequest.SerializeToString,
@@ -88,6 +93,11 @@ class DocumentDBServiceStub(object):
                 '/cognica.rpc.db.document.DocumentDBService/drop_index',
                 request_serializer=document__db__pb2.DropIndexRequest.SerializeToString,
                 response_deserializer=document__db__pb2.DropIndexResponse.FromString,
+                )
+        self.rename_index = channel.unary_unary(
+                '/cognica.rpc.db.document.DocumentDBService/rename_index',
+                request_serializer=document__db__pb2.RenameIndexRequest.SerializeToString,
+                response_deserializer=document__db__pb2.RenameIndexResponse.FromString,
                 )
         self.get_index = channel.unary_unary(
                 '/cognica.rpc.db.document.DocumentDBService/get_index',
@@ -153,6 +163,12 @@ class DocumentDBServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def rename_collection(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def get_collection(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -184,6 +200,12 @@ class DocumentDBServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def drop_index(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def rename_index(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -243,6 +265,11 @@ def add_DocumentDBServiceServicer_to_server(servicer, server):
                     request_deserializer=document__db__pb2.DropCollectionRequest.FromString,
                     response_serializer=document__db__pb2.DropCollectionResponse.SerializeToString,
             ),
+            'rename_collection': grpc.unary_unary_rpc_method_handler(
+                    servicer.rename_collection,
+                    request_deserializer=document__db__pb2.RenameCollectionRequest.FromString,
+                    response_serializer=document__db__pb2.RenameCollectionResponse.SerializeToString,
+            ),
             'get_collection': grpc.unary_unary_rpc_method_handler(
                     servicer.get_collection,
                     request_deserializer=document__db__pb2.GetCollectionRequest.FromString,
@@ -272,6 +299,11 @@ def add_DocumentDBServiceServicer_to_server(servicer, server):
                     servicer.drop_index,
                     request_deserializer=document__db__pb2.DropIndexRequest.FromString,
                     response_serializer=document__db__pb2.DropIndexResponse.SerializeToString,
+            ),
+            'rename_index': grpc.unary_unary_rpc_method_handler(
+                    servicer.rename_index,
+                    request_deserializer=document__db__pb2.RenameIndexRequest.FromString,
+                    response_serializer=document__db__pb2.RenameIndexResponse.SerializeToString,
             ),
             'get_index': grpc.unary_unary_rpc_method_handler(
                     servicer.get_index,
@@ -442,6 +474,23 @@ class DocumentDBService(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
+    def rename_collection(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/cognica.rpc.db.document.DocumentDBService/rename_collection',
+            document__db__pb2.RenameCollectionRequest.SerializeToString,
+            document__db__pb2.RenameCollectionResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
     def get_collection(request,
             target,
             options=(),
@@ -540,6 +589,23 @@ class DocumentDBService(object):
         return grpc.experimental.unary_unary(request, target, '/cognica.rpc.db.document.DocumentDBService/drop_index',
             document__db__pb2.DropIndexRequest.SerializeToString,
             document__db__pb2.DropIndexResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def rename_index(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/cognica.rpc.db.document.DocumentDBService/rename_index',
+            document__db__pb2.RenameIndexRequest.SerializeToString,
+            document__db__pb2.RenameIndexResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
