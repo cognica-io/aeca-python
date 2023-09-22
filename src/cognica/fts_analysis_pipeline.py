@@ -5,6 +5,7 @@
 #
 
 # pylint: disable=no-member,missing-class-docstring,missing-function-docstring
+# pylint: disable=invalid-name
 
 import time
 import typing as t
