@@ -520,7 +520,7 @@ class DocumentDB:
         self._invoke(self._stub.truncate_collection, req, wait_for_ready=True)
 
     def create_index(
-        self, collection, index_name, fields, unique, index_type, options
+        self, collection, index_name, fields, unique, index_type, options=None
     ) -> None:
         if options is not None:
             options = _to_json(options)
