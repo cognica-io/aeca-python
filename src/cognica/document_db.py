@@ -482,7 +482,7 @@ class DocumentDB:
         index_descs = []
         for index_desc in indexes:
             index_id = index_desc.get("index_id", 0)
-            index_name = index_desc.get("index_name")
+            index_name = index_desc.get("index_name") or index_desc.get("name")
             fields = index_desc.get("fields")
             unique = index_desc.get("unique")
             index_type = index_desc.get("index_type")
