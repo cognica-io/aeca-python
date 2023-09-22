@@ -522,8 +522,8 @@ class DocumentDB:
     def create_index(
         self, collection, index_name, fields, unique, index_type, options=None
     ) -> None:
-        if options is not None:
-            options = _to_json(options)
+        if options is None:
+            options = {}
 
         index_desc = IndexDescriptor(
             index_id=0,
@@ -532,7 +532,7 @@ class DocumentDB:
             unique=unique,
             index_type=index_type,
             status=IndexStatus.kEnabled,
-            options=options,
+            options=_to_json(options),
         )
         req = CreateIndexRequest(
             collection_name=collection, index_desc=index_desc
