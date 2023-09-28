@@ -4,8 +4,10 @@
 # Copyright (c) 2023 Cognica, Inc.
 #
 
-# pylint: disable=no-member,missing-class-docstring,missing-function-docstring
+# pylint: disable=no-member,missing-module-docstring,missing-class-docstring,missing-function-docstring
 # pylint: disable=invalid-name,no-else-return
+
+from __future__ import annotations
 
 import io
 import json
@@ -80,7 +82,9 @@ ListCollectionsRequest: t.TypeAlias = messages.ListCollectionsRequest  # type: i
 ListCollectionsResponse: t.TypeAlias = messages.ListCollectionsResponse  # type: ignore
 
 
-def _to_json(doc):
+def _to_json(
+    doc: dict | list | document_db_pb2.Document,
+) -> document_db_pb2.Document:
     if isinstance(doc, document_pb2.Document):  # type: ignore
         return doc
     elif isinstance(doc, (dict, list)):
@@ -94,13 +98,12 @@ def _to_json(doc):
 class Request:
     def __init__(
         self,
-        collection,
-        query,
-        index_columns=None,
-        columns=None,
-        dtypes=None,
-        skip=None,
-        limit=None,
+        collection: str,
+        query: dict | list[dict],
+        index_columns: list[str] | None = None,
+        columns: list[str] | None = None,
+        dtypes: dict[str, str] | None = None,
+        limit: int | None = None,
     ):
         query = _to_json(query)
 
@@ -109,11 +112,10 @@ class Request:
         self.index_columns = index_columns
         self.columns = columns
         self.dtypes = dtypes
-        self.skip = skip
         self.limit = limit
 
 
-def _create_stub(stub: t.Callable, channel: Channel):
+def _create_stub(stub: t.Callable, channel: Channel) -> DocumentDBServiceStub:
     stub = stub(channel.channel)
 
     return stub
@@ -129,16 +131,16 @@ class DocumentDB:
 
     def find(
         self,
-        collection,
-        query,
-        limit=None,
-        index_columns=None,
-        columns=None,
-        dtypes=None,
-        to_pandas=True,
-        to_polars=False,
-        to_arrow=False,
-        enable_profile=False,
+        collection: str,
+        query: dict | list[dict],
+        limit: int | None = None,
+        index_columns: list[str] | None = None,
+        columns: list[str] | None = None,
+        dtypes: dict[str, str] | None = None,
+        to_pandas: bool = True,
+        to_polars: bool = False,
+        to_arrow: bool = False,
+        enable_profile: bool = False,
     ) -> (
         pd.DataFrame
         | pl.DataFrame
@@ -190,11 +192,11 @@ class DocumentDB:
 
     def find_batch(
         self,
-        requests,
-        to_pandas=True,
-        to_polars=False,
-        to_arrow=False,
-        enable_profile=False,
+        requests: list[Request],
+        to_pandas: bool = True,
+        to_polars: bool = False,
+        to_arrow: bool = False,
+        enable_profile: bool = False,
     ) -> (
         list[pd.DataFrame]
         | list[pa.Table]
@@ -263,7 +265,7 @@ class DocumentDB:
         else:
             return dfs
 
-    def insert(self, collection, docs) -> None:
+    def insert(self, collection: str, docs: dict | list[dict]) -> None:
         if not isinstance(docs, list):
             docs = [docs]
 
@@ -276,7 +278,12 @@ class DocumentDB:
         req = InsertRequest(requests=items)
         self._invoke(self._stub.insert, req, wait_for_ready=True)
 
-    def update(self, collection, filter_, updates) -> None:
+    def update(
+        self,
+        collection: str,
+        filter_: dict | list[dict],
+        updates: dict | list[dict],
+    ) -> None:
         filter_ = _to_json(filter_)
         updates = _to_json(updates)
         req = UpdateRequest(
@@ -285,7 +292,7 @@ class DocumentDB:
 
         self._invoke(self._stub.update, req, wait_for_ready=True)
 
-    def remove(self, collection, docs) -> None:
+    def remove(self, collection: str, docs: dict | list[dict]) -> None:
         if not isinstance(docs, list):
             docs = [docs]
 
@@ -299,7 +306,7 @@ class DocumentDB:
 
         self._invoke(self._stub.remove, req, wait_for_ready=True)
 
-    def get_collection(self, collection) -> t.Dict[str, t.Any]:
+    def get_collection(self, collection: str) -> dict[str, t.Any]:
         req = GetCollectionRequest(collection_name=collection)
         resp: GetCollectionResponse = self._invoke(
             self._stub.get_collection, req, wait_for_ready=True
@@ -380,7 +387,7 @@ class DocumentDB:
             ],
         }
 
-    def get_collections(self, collections) -> t.Dict[str, t.Any]:
+    def get_collections(self, collections: list[str]) -> dict[str, t.Any]:
         req = GetCollectionsRequest(collection_names=collections)
         resp: GetCollectionsResponse = self._invoke(
             self._stub.get_collections, req, wait_for_ready=True
@@ -464,7 +471,7 @@ class DocumentDB:
             "data": collection_infos,
         }
 
-    def list_collections(self) -> t.List[str]:
+    def list_collections(self) -> list[str]:
         req = ListCollectionsRequest()
 
         collection_names = []
@@ -505,22 +512,28 @@ class DocumentDB:
         req = CreateCollectionRequest(collection=collection_info)
         self._invoke(self._stub.create_collection, req, wait_for_ready=True)
 
-    def drop_collection(self, collection) -> None:
+    def drop_collection(self, collection: str) -> None:
         req = DropCollectionRequest(collection_name=collection)
         self._invoke(self._stub.drop_collection, req, wait_for_ready=True)
 
-    def rename_collection(self, old_name, new_name) -> None:
+    def rename_collection(self, old_name: str, new_name: str) -> None:
         req = RenameCollectionRequest(
             old_collection_name=old_name, new_collection_name=new_name
         )
         self._invoke(self._stub.rename_collection, req, wait_for_ready=True)
 
-    def truncate_collection(self, collection) -> None:
+    def truncate_collection(self, collection: str) -> None:
         req = TruncateCollectionRequest(collection_name=collection)
         self._invoke(self._stub.truncate_collection, req, wait_for_ready=True)
 
     def create_index(
-        self, collection, index_name, fields, unique, index_type, options=None
+        self,
+        collection: str,
+        index_name: str,
+        fields: list[str],
+        unique: bool,
+        index_type: str,
+        options: dict | None = None,
     ) -> None:
         if options is None:
             options = {}
@@ -539,13 +552,15 @@ class DocumentDB:
         )
         self._invoke(self._stub.create_index, req, wait_for_ready=True)
 
-    def drop_index(self, collection, index_name) -> None:
+    def drop_index(self, collection: str, index_name: str) -> None:
         req = DropIndexRequest(
             collection_name=collection, index_name=index_name
         )
         self._invoke(self._stub.drop_index, req, wait_for_ready=True)
 
-    def rename_index(self, collection, old_name, new_name) -> None:
+    def rename_index(
+        self, collection: str, old_name: str, new_name: str
+    ) -> None:
         req = RenameIndexRequest(
             collection_name=collection,
             old_index_name=old_name,
@@ -553,7 +568,7 @@ class DocumentDB:
         )
         self._invoke(self._stub.rename_index, req, wait_for_ready=True)
 
-    def get_index(self, collection, index_name) -> t.Dict[str, t.Any]:
+    def get_index(self, collection: str, index_name: str) -> dict[str, t.Any]:
         req = GetIndexRequest(collection_name=collection, index_name=index_name)
         resp: GetIndexResponse = self._invoke(
             self._stub.get_index, req, wait_for_ready=True
@@ -623,12 +638,17 @@ class DocumentDB:
             ],
         }
 
-    def empty(self, collection, query, dtypes=None) -> bool:
+    def empty(
+        self,
+        collection: str,
+        query: dict | list[dict],
+        dtypes: dict[str, str] | None = None,
+    ) -> bool:
         df = self.find(collection, query, dtypes=dtypes, limit=1)
 
         return len(df) == 0
 
-    def _invoke(self, func, *args, **kwargs):
+    def _invoke(self, func: t.Callable, *args, **kwargs) -> t.Any:
         retry = 0
         backoff = 0.1
         resp = None
@@ -650,7 +670,11 @@ class DocumentDB:
         return resp
 
     def _to_pd_dataframe(
-        self, buffer, index_columns=None, columns=None, dtypes=None
+        self,
+        buffer: object,
+        index_columns: list[str] | None = None,
+        columns: list[str] | None = None,
+        dtypes: dict[str, str] | None = None,
     ) -> pd.DataFrame:
         if len(buffer) > 0:
             table = self._to_arrow_table(buffer)
@@ -672,7 +696,10 @@ class DocumentDB:
         return df
 
     def _to_pl_dataframe(
-        self, buffer, columns=None, dtypes=None
+        self,
+        buffer: object,
+        columns: list[str] | None = None,
+        dtypes: dict[str, str] | None = None,
     ) -> pl.DataFrame:
         if len(buffer) > 0:
             df = pl.read_parquet(io.BytesIO(buffer), columns=columns)
@@ -686,7 +713,9 @@ class DocumentDB:
 
         return df
 
-    def _to_arrow_table(self, buffer, columns=None) -> pa.Table:
+    def _to_arrow_table(
+        self, buffer: object, columns: list[str] | None = None
+    ) -> pa.Table:
         buffer_arrow = pa.py_buffer(buffer)
         table = pq.read_table(buffer_arrow, columns=columns)
 

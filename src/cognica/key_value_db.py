@@ -5,7 +5,9 @@
 #
 
 # pylint: disable=no-member,broad-exception-caught
-# pylint: disable=missing-class-docstring,missing-function-docstring
+# pylint: disable=missing-module-docstring,missing-class-docstring,missing-function-docstring
+
+from __future__ import annotations
 
 import time
 import typing as t
@@ -64,7 +66,9 @@ ListKeyspacesResponse: t.TypeAlias = (
 )
 
 
-def _create_stub(stub: t.Callable, channel: Channel):
+def _create_stub(
+    stub: t.Callable, channel: Channel
+) -> KeyspaceManagerServiceStub:
     stub = stub(channel.channel)
 
     return stub
@@ -83,8 +87,8 @@ class KeyValueDB:
     def put(
         self,
         keyspace_name: str,
-        key: t.Union[bytes, str],
-        value: t.Union[bytes, str],
+        key: bytes | str,
+        value: bytes | str,
         ttl: int = 0,
         create_if_missing: bool = True,
     ) -> bool:
@@ -109,7 +113,7 @@ class KeyValueDB:
 
         return resp.response.status == StatusType.kOK
 
-    def remove(self, keyspace_name: str, key: t.Union[bytes, str]) -> bool:
+    def remove(self, keyspace_name: str, key: bytes | str) -> bool:
         if isinstance(key, str):
             key = key.encode("utf-8")
 
@@ -123,9 +127,7 @@ class KeyValueDB:
 
         return resp.response.status == StatusType.kOK
 
-    def get(
-        self, keyspace_name: str, key: t.Union[bytes, str]
-    ) -> t.Optional[bytes]:
+    def get(self, keyspace_name: str, key: bytes | str) -> bytes | None:
         if isinstance(key, str):
             key = key.encode("utf-8")
 
@@ -143,8 +145,8 @@ class KeyValueDB:
         return resp.value
 
     def mget(
-        self, keyspace_name: str, keys: t.List[t.Union[bytes, str]]
-    ) -> t.List[t.Optional[bytes]]:
+        self, keyspace_name: str, keys: list[bytes | str]
+    ) -> list[bytes | None]:
         keys_encoded = []
         for key in keys:
             if isinstance(key, str):
@@ -174,11 +176,11 @@ class KeyValueDB:
     def put_batch(
         self,
         keyspace_name: str,
-        keys: t.List[t.Union[bytes, str]],
-        values: t.List[t.Union[bytes, str]],
-        ttls: t.List[int],
+        keys: list[bytes | str],
+        values: list[bytes | str],
+        ttls: list[int],
         create_if_missing: bool = True,
-    ) -> t.List[bool]:
+    ) -> list[bool]:
         keys_encoded = []
         values_encoded = []
         for key, value in zip(keys, values):
@@ -213,8 +215,8 @@ class KeyValueDB:
         return statuses
 
     def remove_batch(
-        self, keyspace_name: str, keys: t.List[t.Union[bytes, str]]
-    ) -> t.List[bool]:
+        self, keyspace_name: str, keys: list[bytes | str]
+    ) -> list[bool]:
         keys_encoded = []
         for key in keys:
             if isinstance(key, str):
@@ -241,8 +243,8 @@ class KeyValueDB:
         return statuses
 
     def get_batch(
-        self, keyspace_name: str, keys: t.List[t.Union[bytes, str]]
-    ) -> t.List[t.Optional[bytes]]:
+        self, keyspace_name: str, keys: list[bytes | str]
+    ) -> list[bytes | None]:
         keys_encoded = []
         for key in keys:
             if isinstance(key, str):
@@ -318,7 +320,7 @@ class KeyspaceManager:
 
         return resp.response.status == StatusType.kOK
 
-    def list_keyspaces(self) -> t.List[str]:
+    def list_keyspaces(self) -> list[str]:
         req = ListKeyspacesRequest()
         resp: ListKeyspacesResponse = self._invoke(
             self._stub.list_keyspaces, req, wait_for_ready=True
@@ -329,7 +331,7 @@ class KeyspaceManager:
 
         return resp.keyspace_names
 
-    def _invoke(self, func, *args, **kwargs):
+    def _invoke(self, func: t.Callable, *args, **kwargs) -> t.Any:
         retry = 0
         backoff = 0.1
         resp = None

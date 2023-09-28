@@ -5,7 +5,9 @@
 #
 
 # pylint: disable=no-member,broad-exception-caught
-# pylint: disable=missing-class-docstring,missing-function-docstring
+# pylint: disable=missing-module-docstring,missing-class-docstring,missing-function-docstring
+
+from __future__ import annotations
 
 import io
 import time
@@ -50,7 +52,9 @@ QAEncoderRequest: t.TypeAlias = messages.QAEncoderRequest  # type: ignore
 QAEncoderResponse: t.TypeAlias = messages.QAEncoderResponse  # type: ignore
 
 
-def _create_stub(stub: t.Callable, channel: Channel):
+def _create_stub(
+    stub: t.Callable, channel: Channel
+) -> SentenceTransformerServiceStub | QAEncoderServiceStub:
     return stub(channel.channel)
 
 
@@ -63,7 +67,7 @@ class SentenceTransformerEncoder:
         self._stub = _create_stub(SentenceTransformerServiceStub, channel)
         self._timeout = timeout
 
-    def encode(self, sentences: t.List[str] | str) -> t.Optional[np.ndarray]:
+    def encode(self, sentences: list[str] | str) -> np.ndarray | None:
         if not isinstance(sentences, list):
             sentences = [sentences]
 
@@ -86,7 +90,7 @@ class SentenceTransformerEncoder:
 
         return np.array(data, dtype=np.float32)
 
-    def _invoke(self, func, *args, **kwargs):
+    def _invoke(self, func: t.Callable, *args, **kwargs) -> t.Any:
         retry = 0
         backoff = 0.1
         resp = None
@@ -118,14 +122,14 @@ class SentenceTransformerCrossEncoder:
         self._timeout = timeout
 
     def predict(
-        self, sentence_pairs: t.List[t.Tuple[str, str]]
-    ) -> t.Optional[np.ndarray]:
+        self, sentence_pairs: list[tuple[str, str]]
+    ) -> np.ndarray | None:
         if not isinstance(sentence_pairs, list):
             sentence_pairs = [sentence_pairs]
 
         sentences = []
-        for s1, s2 in sentence_pairs:
-            pair = SentencePair(sentence1=s1, sentence2=s2)
+        for sentence1, sentence2 in sentence_pairs:
+            pair = SentencePair(sentence1=sentence1, sentence2=sentence2)
             sentences.append(pair)
         req = CrossEncoderRequest(
             model_name=self._model_name, sentences=sentences
@@ -173,20 +177,18 @@ class SentenceTransformerCLIPEncoder:
         self._stub = _create_stub(CLIPEncoderServiceStub, channel)
         self._timeout = timeout
 
-    def encode(
-        self, inputs: t.List[t.Union[bytes, Image.Image]]
-    ) -> t.Optional[np.ndarray]:
+    def encode(self, inputs: list[bytes | Image.Image]) -> np.ndarray | None:
         if not isinstance(inputs, list):
             inputs = [inputs]
 
         new_inputs = []
-        for s in inputs:
-            if isinstance(s, Image.Image):
+        for input_ in inputs:
+            if isinstance(input_, Image.Image):
                 buffer = io.BytesIO()
-                s.save(buffer, format="png")
+                input_.save(buffer, format="png")
                 new_inputs.append(buffer.getvalue())
             else:
-                new_inputs.append(s)
+                new_inputs.append(input_)
 
         req = CLIPEncoderRequest(model_name=self._model_name, inputs=new_inputs)
         try:
@@ -205,7 +207,7 @@ class SentenceTransformerCLIPEncoder:
 
         return np.array(data, dtype=np.float32)
 
-    def _invoke(self, func, *args, **kwargs):
+    def _invoke(self, func: t.Callable, *args, **kwargs) -> t.Any:
         retry = 0
         backoff = 0.1
         resp = None
@@ -238,10 +240,10 @@ class SentenceTransformerQAEncoder:
 
     def predict(
         self,
-        questions: t.Union[str, t.List[str]],
-        contexts: t.Union[str, t.List[str]],
+        questions: str | list[str],
+        contexts: str | list[str],
         top_k: int = 1,
-    ) -> t.Optional[t.List[t.List[t.Dict[str, t.Any]]]]:
+    ) -> list[list[dict[str, t.Any]]] | None:
         if not isinstance(questions, list):
             questions = [questions]
         if not isinstance(contexts, list):
@@ -263,9 +265,9 @@ class SentenceTransformerQAEncoder:
         if resp.status != StatusType.kOK:
             return None
 
-        outputs: t.List[t.List[t.Dict[str, t.Any]]] = []
+        outputs: list[list[dict[str, t.Any]]] = []
         for answer in resp.answers:
-            candidates: t.List[t.Dict[str, t.Any]] = []
+            candidates: list[dict[str, t.Any]] = []
             for candidate in answer.candidates:
                 candidates.append(
                     {
@@ -279,7 +281,7 @@ class SentenceTransformerQAEncoder:
 
         return outputs
 
-    def _invoke(self, func, *args, **kwargs):
+    def _invoke(self, func: t.Callable, *args, **kwargs) -> t.Any:
         retry = 0
         backoff = 0.1
         resp = None
