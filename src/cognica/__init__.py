@@ -4,6 +4,8 @@
 # Copyright (c) 2023 Cognica, Inc.
 #
 
+# pylint: disable=missing-module-docstring
+
 from cognica.channel import Channel
 from cognica.document_db import DocumentDB
 from cognica.fts_analysis_pipeline import FTSAnalysisPipeline

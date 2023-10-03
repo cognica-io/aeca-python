@@ -4,8 +4,10 @@
 # Copyright (c) 2023 Cognica, Inc.
 #
 
-# pylint: disable=no-member,missing-class-docstring,missing-function-docstring
+# pylint: disable=no-member,missing-module-docstring,missing-class-docstring,missing-function-docstring
 # pylint: disable=invalid-name
+
+from __future__ import annotations
 
 import time
 import typing as t
@@ -39,7 +41,9 @@ AdhocPipelineExecutionResponse: t.TypeAlias = (
 )
 
 
-def _create_stub(stub: t.Callable, channel: Channel):
+def _create_stub(
+    stub: t.Callable, channel: Channel
+) -> FTSAnalysisPipelineServiceStub:
     stub = stub(channel.channel)
 
     return stub
@@ -56,7 +60,7 @@ class FTSAnalysisPipeline:
         collection_name: str,
         index_name: str,
         query: str,
-        field_names: t.Optional[t.List[str]] = None,
+        field_names: list[str] | None = None,
     ) -> str:
         req = PipelineExecutionRequest(
             collection_name=collection_name,
@@ -74,7 +78,7 @@ class FTSAnalysisPipeline:
         self,
         pipeline_def: str,
         query: str,
-        field_names: t.Optional[t.List[str]] = None,
+        field_names: list[str] | None = None,
     ) -> str:
         req = AdhocPipelineExecutionRequest(
             pipeline_def=pipeline_def, field_names=field_names, query=query
@@ -85,7 +89,7 @@ class FTSAnalysisPipeline:
 
         return resp.result
 
-    def _invoke(self, func, *args, **kwargs):
+    def _invoke(self, func: t.Callable, *args, **kwargs) -> t.Any:
         retry = 0
         backoff = 0.1
         resp = None

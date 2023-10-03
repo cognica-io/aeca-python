@@ -1,4 +1,6 @@
 pandas>=1.5.3
 pyarrow>=11.0.0
+polars>=0.16.18
 grpcio>=1.53.0
 protobuf>=4.22.1
+pillow
