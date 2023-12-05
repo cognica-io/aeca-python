@@ -18,7 +18,6 @@ dependencies = [
   "protobuf>=4.22.1",
   "pillow",
 ]
-optional-dependencies = { protobuf = ["grpcio>=1.43.0"] }
 keywords = [
   "Cognica",
   "key-value",
@@ -50,6 +49,10 @@ classifiers = [
 
 [project.urls]
 "Homepage" = "https://www.cognica.io"
+
+[project.optional-dependencies]
+  protobuf = ["grpcio>=1.43.0"]
+  server = ["cognica-server"]
 
 [tool.black]
 line-length = 80
