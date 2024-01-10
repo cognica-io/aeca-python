@@ -4,6 +4,11 @@
 // Copyright (c) 2023 Cognica, Inc.
 //
 
+// clang-format off
+// protoc --cpp_out=. document_db.proto
+// protoc --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_cpp_plugin` document_db.proto
+// clang-format on
+
 syntax = "proto3";
 
 package cognica.rpc.db.document;
@@ -22,6 +27,8 @@ service DocumentDBService {
   rpc insert(InsertRequest) returns (InsertResponse) {}
   rpc update(UpdateRequest) returns (UpdateResponse) {}
   rpc remove(RemoveRequest) returns (RemoveResponse) {}
+
+  rpc explain(ExplainRequest) returns (ExplainResponse) {}
 
   rpc create_collection(CreateCollectionRequest)
       returns (CreateCollectionResponse) {}
@@ -291,6 +298,21 @@ message RemoveResponse {
   int32 status = 1;
   string message = 2;
   ProfileInfo profile = 3;
+}
+
+message ExplainRequest { repeated Query queries = 1; }
+
+message QueryPlan {
+  int32 status = 1;
+  string message = 2;
+  string collection_name = 3;
+  string index_name = 4;
+  string query_plan = 5;
+}
+
+message ExplainResponse {
+  int32 status = 1;
+  repeated QueryPlan query_plans = 2;
 }
 
 message TruncateCollectionRequest { string collection_name = 1; }

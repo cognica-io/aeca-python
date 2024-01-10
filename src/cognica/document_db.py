@@ -61,6 +61,10 @@ UpdateResponse: t.TypeAlias = messages.UpdateResponse  # type: ignore
 RemoveRequest: t.TypeAlias = messages.RemoveRequest  # type: ignore
 RemoveResponse: t.TypeAlias = messages.RemoveResponse  # type: ignore
 
+QueryPlan: t.TypeAlias = messages.QueryPlan  # type: ignore
+ExplainRequest: t.TypeAlias = messages.ExplainRequest  # type: ignore
+ExplainResponse: t.TypeAlias = messages.ExplainResponse  # type: ignore
+
 CollectionInfo: t.TypeAlias = messages.CollectionInfo  # type: ignore
 GetCollectionRequest: t.TypeAlias = messages.GetCollectionRequest  # type: ignore
 GetCollectionResponse: t.TypeAlias = messages.GetCollectionResponse  # type: ignore
@@ -305,6 +309,29 @@ class DocumentDB:
         req = RemoveRequest(requests=items)
 
         self._invoke(self._stub.remove, req, wait_for_ready=True)
+
+    def explain(self, collection: str, query: dict) -> dict | None:
+        req = ExplainRequest(
+            queries=[Query(collection_name=collection, query=_to_json(query))]
+        )
+        resp: ExplainResponse = self._invoke(
+            self._stub.explain, req, wait_for_ready=True
+        )
+
+        if resp.status != 0 or not resp.query_plans:
+            return None
+
+        return {
+            "success": resp.status == 0,
+            "query_plans": [
+                {
+                    "collection_name": query_plan.collection_name,
+                    "index_name": query_plan.index_name,
+                    "query_plan": query_plan.query_plan,
+                }
+                for query_plan in resp.query_plans
+            ],
+        }
 
     def get_collection(self, collection: str) -> dict[str, t.Any]:
         req = GetCollectionRequest(collection_name=collection)
