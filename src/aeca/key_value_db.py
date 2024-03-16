@@ -1,7 +1,7 @@
 #
-# Cognica
+# Aeca
 #
-# Copyright (c) 2023 Cognica, Inc.
+# Copyright (c) 2024 Aeca, Inc.
 #
 
 # pylint: disable=no-member,broad-exception-caught
@@ -14,8 +14,8 @@ import typing as t
 
 import grpc
 
-from cognica.channel import Channel
-from cognica.protobuf import key_value_db_pb2, key_value_db_pb2_grpc
+from aeca.channel import Channel
+from aeca.protobuf import key_value_db_pb2, key_value_db_pb2_grpc
 
 
 messages: t.TypeAlias = key_value_db_pb2  # type: ignore

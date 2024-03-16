@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import cognica.protobuf.key_value_db_pb2 as key__value__db__pb2
+import aeca.protobuf.key_value_db_pb2 as key__value__db__pb2
 
 
 class KeyValueDBServiceStub(object):

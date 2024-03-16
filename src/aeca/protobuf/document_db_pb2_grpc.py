@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import cognica.protobuf.document_db_pb2 as document__db__pb2
+import aeca.protobuf.document_db_pb2 as document__db__pb2
 
 
 class DocumentDBServiceStub(object):

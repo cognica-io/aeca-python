@@ -1,7 +1,7 @@
 #
-# Cognica
+# Aeca
 #
-# Copyright (c) 2023 Cognica, Inc.
+# Copyright (c) 2024 Aeca, Inc.
 #
 
 # pylint: disable=no-member,missing-module-docstring,missing-class-docstring,missing-function-docstring
@@ -14,8 +14,8 @@ import typing as t
 
 import grpc
 
-from cognica.channel import Channel
-from cognica.protobuf import (
+from aeca.channel import Channel
+from aeca.protobuf import (
     fts_analysis_pipeline_pb2,
     fts_analysis_pipeline_pb2_grpc,
 )

@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import cognica.protobuf.fts_analysis_pipeline_pb2 as fts__analysis__pipeline__pb2
+import aeca.protobuf.fts_analysis_pipeline_pb2 as fts__analysis__pipeline__pb2
 
 
 class FTSAnalysisPipelineServiceStub(object):

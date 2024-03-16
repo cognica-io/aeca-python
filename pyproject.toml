@@ -3,10 +3,10 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "cognica"
-version = "0.1.14"
-authors = [{ name = "Cognica, Inc.", email = "jaepil@cognica.io" }]
-description = "Python client for Cognica database"
+name = "aeca"
+version = "0.1.15.dev2"
+authors = [{ name = "Aeca, Inc.", email = "jaepil@aeca.ai" }]
+description = "Python client for Aeca database"
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.9"
@@ -19,6 +19,7 @@ dependencies = [
   "pillow",
 ]
 keywords = [
+  "Aeca",
   "Cognica",
   "key-value",
   "document store",
@@ -48,7 +49,7 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://www.cognica.io"
+"Homepage" = "https://www.aeca.ai"
 
 [project.optional-dependencies]
   protobuf = ["grpcio>=1.43.0"]

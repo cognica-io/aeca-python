@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import cognica.protobuf.sentence_transformer_pb2 as sentence__transformer__pb2
+import aeca.protobuf.sentence_transformer_pb2 as sentence__transformer__pb2
 
 
 class SentenceTransformerServiceStub(object):
