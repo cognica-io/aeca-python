@@ -1,12 +1,17 @@
 //
-// Cognica
+// Aeca
 //
-// Copyright (c) 2023 Cognica, Inc.
+// Copyright (c) 2023-2024 Aeca, Inc.
 //
+
+// clang-format off
+// protoc --cpp_out=. key_value_db.proto
+// protoc --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_cpp_plugin` key_value_db.proto
+// clang-format on
 
 syntax = "proto3";
 
-package cognica.rpc.db.kv;
+package aeca.rpc.db.kv;
 
 option cc_enable_arenas = true;
 

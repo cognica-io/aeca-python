@@ -15,97 +15,97 @@ class DocumentDBServiceStub(object):
             channel: A grpc.Channel.
         """
         self.find = channel.unary_unary(
-                '/cognica.rpc.db.document.DocumentDBService/find',
+                '/aeca.rpc.db.document.DocumentDBService/find',
                 request_serializer=document__db__pb2.FindRequest.SerializeToString,
                 response_deserializer=document__db__pb2.FindResponse.FromString,
                 )
         self.find_batch = channel.unary_unary(
-                '/cognica.rpc.db.document.DocumentDBService/find_batch',
+                '/aeca.rpc.db.document.DocumentDBService/find_batch',
                 request_serializer=document__db__pb2.FindBatchRequest.SerializeToString,
                 response_deserializer=document__db__pb2.FindBatchResponse.FromString,
                 )
         self.count = channel.unary_unary(
-                '/cognica.rpc.db.document.DocumentDBService/count',
+                '/aeca.rpc.db.document.DocumentDBService/count',
                 request_serializer=document__db__pb2.CountRequest.SerializeToString,
                 response_deserializer=document__db__pb2.CountResponse.FromString,
                 )
         self.contains = channel.unary_unary(
-                '/cognica.rpc.db.document.DocumentDBService/contains',
+                '/aeca.rpc.db.document.DocumentDBService/contains',
                 request_serializer=document__db__pb2.ContainsRequest.SerializeToString,
                 response_deserializer=document__db__pb2.ContainsResponse.FromString,
                 )
         self.insert = channel.unary_unary(
-                '/cognica.rpc.db.document.DocumentDBService/insert',
+                '/aeca.rpc.db.document.DocumentDBService/insert',
                 request_serializer=document__db__pb2.InsertRequest.SerializeToString,
                 response_deserializer=document__db__pb2.InsertResponse.FromString,
                 )
         self.update = channel.unary_unary(
-                '/cognica.rpc.db.document.DocumentDBService/update',
+                '/aeca.rpc.db.document.DocumentDBService/update',
                 request_serializer=document__db__pb2.UpdateRequest.SerializeToString,
                 response_deserializer=document__db__pb2.UpdateResponse.FromString,
                 )
         self.remove = channel.unary_unary(
-                '/cognica.rpc.db.document.DocumentDBService/remove',
+                '/aeca.rpc.db.document.DocumentDBService/remove',
                 request_serializer=document__db__pb2.RemoveRequest.SerializeToString,
                 response_deserializer=document__db__pb2.RemoveResponse.FromString,
                 )
         self.explain = channel.unary_unary(
-                '/cognica.rpc.db.document.DocumentDBService/explain',
+                '/aeca.rpc.db.document.DocumentDBService/explain',
                 request_serializer=document__db__pb2.ExplainRequest.SerializeToString,
                 response_deserializer=document__db__pb2.ExplainResponse.FromString,
                 )
         self.create_collection = channel.unary_unary(
-                '/cognica.rpc.db.document.DocumentDBService/create_collection',
+                '/aeca.rpc.db.document.DocumentDBService/create_collection',
                 request_serializer=document__db__pb2.CreateCollectionRequest.SerializeToString,
                 response_deserializer=document__db__pb2.CreateCollectionResponse.FromString,
                 )
         self.drop_collection = channel.unary_unary(
-                '/cognica.rpc.db.document.DocumentDBService/drop_collection',
+                '/aeca.rpc.db.document.DocumentDBService/drop_collection',
                 request_serializer=document__db__pb2.DropCollectionRequest.SerializeToString,
                 response_deserializer=document__db__pb2.DropCollectionResponse.FromString,
                 )
         self.rename_collection = channel.unary_unary(
-                '/cognica.rpc.db.document.DocumentDBService/rename_collection',
+                '/aeca.rpc.db.document.DocumentDBService/rename_collection',
                 request_serializer=document__db__pb2.RenameCollectionRequest.SerializeToString,
                 response_deserializer=document__db__pb2.RenameCollectionResponse.FromString,
                 )
         self.get_collection = channel.unary_unary(
-                '/cognica.rpc.db.document.DocumentDBService/get_collection',
+                '/aeca.rpc.db.document.DocumentDBService/get_collection',
                 request_serializer=document__db__pb2.GetCollectionRequest.SerializeToString,
                 response_deserializer=document__db__pb2.GetCollectionResponse.FromString,
                 )
         self.get_collections = channel.unary_unary(
-                '/cognica.rpc.db.document.DocumentDBService/get_collections',
+                '/aeca.rpc.db.document.DocumentDBService/get_collections',
                 request_serializer=document__db__pb2.GetCollectionsRequest.SerializeToString,
                 response_deserializer=document__db__pb2.GetCollectionsResponse.FromString,
                 )
         self.list_collections = channel.unary_unary(
-                '/cognica.rpc.db.document.DocumentDBService/list_collections',
+                '/aeca.rpc.db.document.DocumentDBService/list_collections',
                 request_serializer=document__db__pb2.ListCollectionsRequest.SerializeToString,
                 response_deserializer=document__db__pb2.ListCollectionsResponse.FromString,
                 )
         self.truncate_collection = channel.unary_unary(
-                '/cognica.rpc.db.document.DocumentDBService/truncate_collection',
+                '/aeca.rpc.db.document.DocumentDBService/truncate_collection',
                 request_serializer=document__db__pb2.TruncateCollectionRequest.SerializeToString,
                 response_deserializer=document__db__pb2.TruncateCollectionResponse.FromString,
                 )
         self.create_index = channel.unary_unary(
-                '/cognica.rpc.db.document.DocumentDBService/create_index',
+                '/aeca.rpc.db.document.DocumentDBService/create_index',
                 request_serializer=document__db__pb2.CreateIndexRequest.SerializeToString,
                 response_deserializer=document__db__pb2.CreateIndexResponse.FromString,
                 )
         self.drop_index = channel.unary_unary(
-                '/cognica.rpc.db.document.DocumentDBService/drop_index',
+                '/aeca.rpc.db.document.DocumentDBService/drop_index',
                 request_serializer=document__db__pb2.DropIndexRequest.SerializeToString,
                 response_deserializer=document__db__pb2.DropIndexResponse.FromString,
                 )
         self.rename_index = channel.unary_unary(
-                '/cognica.rpc.db.document.DocumentDBService/rename_index',
+                '/aeca.rpc.db.document.DocumentDBService/rename_index',
                 request_serializer=document__db__pb2.RenameIndexRequest.SerializeToString,
                 response_deserializer=document__db__pb2.RenameIndexResponse.FromString,
                 )
         self.get_index = channel.unary_unary(
-                '/cognica.rpc.db.document.DocumentDBService/get_index',
+                '/aeca.rpc.db.document.DocumentDBService/get_index',
                 request_serializer=document__db__pb2.GetIndexRequest.SerializeToString,
                 response_deserializer=document__db__pb2.GetIndexResponse.FromString,
                 )
@@ -328,7 +328,7 @@ def add_DocumentDBServiceServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'cognica.rpc.db.document.DocumentDBService', rpc_method_handlers)
+            'aeca.rpc.db.document.DocumentDBService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -347,7 +347,7 @@ class DocumentDBService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/cognica.rpc.db.document.DocumentDBService/find',
+        return grpc.experimental.unary_unary(request, target, '/aeca.rpc.db.document.DocumentDBService/find',
             document__db__pb2.FindRequest.SerializeToString,
             document__db__pb2.FindResponse.FromString,
             options, channel_credentials,
@@ -364,7 +364,7 @@ class DocumentDBService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/cognica.rpc.db.document.DocumentDBService/find_batch',
+        return grpc.experimental.unary_unary(request, target, '/aeca.rpc.db.document.DocumentDBService/find_batch',
             document__db__pb2.FindBatchRequest.SerializeToString,
             document__db__pb2.FindBatchResponse.FromString,
             options, channel_credentials,
@@ -381,7 +381,7 @@ class DocumentDBService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/cognica.rpc.db.document.DocumentDBService/count',
+        return grpc.experimental.unary_unary(request, target, '/aeca.rpc.db.document.DocumentDBService/count',
             document__db__pb2.CountRequest.SerializeToString,
             document__db__pb2.CountResponse.FromString,
             options, channel_credentials,
@@ -398,7 +398,7 @@ class DocumentDBService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/cognica.rpc.db.document.DocumentDBService/contains',
+        return grpc.experimental.unary_unary(request, target, '/aeca.rpc.db.document.DocumentDBService/contains',
             document__db__pb2.ContainsRequest.SerializeToString,
             document__db__pb2.ContainsResponse.FromString,
             options, channel_credentials,
@@ -415,7 +415,7 @@ class DocumentDBService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/cognica.rpc.db.document.DocumentDBService/insert',
+        return grpc.experimental.unary_unary(request, target, '/aeca.rpc.db.document.DocumentDBService/insert',
             document__db__pb2.InsertRequest.SerializeToString,
             document__db__pb2.InsertResponse.FromString,
             options, channel_credentials,
@@ -432,7 +432,7 @@ class DocumentDBService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/cognica.rpc.db.document.DocumentDBService/update',
+        return grpc.experimental.unary_unary(request, target, '/aeca.rpc.db.document.DocumentDBService/update',
             document__db__pb2.UpdateRequest.SerializeToString,
             document__db__pb2.UpdateResponse.FromString,
             options, channel_credentials,
@@ -449,7 +449,7 @@ class DocumentDBService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/cognica.rpc.db.document.DocumentDBService/remove',
+        return grpc.experimental.unary_unary(request, target, '/aeca.rpc.db.document.DocumentDBService/remove',
             document__db__pb2.RemoveRequest.SerializeToString,
             document__db__pb2.RemoveResponse.FromString,
             options, channel_credentials,
@@ -466,7 +466,7 @@ class DocumentDBService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/cognica.rpc.db.document.DocumentDBService/explain',
+        return grpc.experimental.unary_unary(request, target, '/aeca.rpc.db.document.DocumentDBService/explain',
             document__db__pb2.ExplainRequest.SerializeToString,
             document__db__pb2.ExplainResponse.FromString,
             options, channel_credentials,
@@ -483,7 +483,7 @@ class DocumentDBService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/cognica.rpc.db.document.DocumentDBService/create_collection',
+        return grpc.experimental.unary_unary(request, target, '/aeca.rpc.db.document.DocumentDBService/create_collection',
             document__db__pb2.CreateCollectionRequest.SerializeToString,
             document__db__pb2.CreateCollectionResponse.FromString,
             options, channel_credentials,
@@ -500,7 +500,7 @@ class DocumentDBService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/cognica.rpc.db.document.DocumentDBService/drop_collection',
+        return grpc.experimental.unary_unary(request, target, '/aeca.rpc.db.document.DocumentDBService/drop_collection',
             document__db__pb2.DropCollectionRequest.SerializeToString,
             document__db__pb2.DropCollectionResponse.FromString,
             options, channel_credentials,
@@ -517,7 +517,7 @@ class DocumentDBService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/cognica.rpc.db.document.DocumentDBService/rename_collection',
+        return grpc.experimental.unary_unary(request, target, '/aeca.rpc.db.document.DocumentDBService/rename_collection',
             document__db__pb2.RenameCollectionRequest.SerializeToString,
             document__db__pb2.RenameCollectionResponse.FromString,
             options, channel_credentials,
@@ -534,7 +534,7 @@ class DocumentDBService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/cognica.rpc.db.document.DocumentDBService/get_collection',
+        return grpc.experimental.unary_unary(request, target, '/aeca.rpc.db.document.DocumentDBService/get_collection',
             document__db__pb2.GetCollectionRequest.SerializeToString,
             document__db__pb2.GetCollectionResponse.FromString,
             options, channel_credentials,
@@ -551,7 +551,7 @@ class DocumentDBService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/cognica.rpc.db.document.DocumentDBService/get_collections',
+        return grpc.experimental.unary_unary(request, target, '/aeca.rpc.db.document.DocumentDBService/get_collections',
             document__db__pb2.GetCollectionsRequest.SerializeToString,
             document__db__pb2.GetCollectionsResponse.FromString,
             options, channel_credentials,
@@ -568,7 +568,7 @@ class DocumentDBService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/cognica.rpc.db.document.DocumentDBService/list_collections',
+        return grpc.experimental.unary_unary(request, target, '/aeca.rpc.db.document.DocumentDBService/list_collections',
             document__db__pb2.ListCollectionsRequest.SerializeToString,
             document__db__pb2.ListCollectionsResponse.FromString,
             options, channel_credentials,
@@ -585,7 +585,7 @@ class DocumentDBService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/cognica.rpc.db.document.DocumentDBService/truncate_collection',
+        return grpc.experimental.unary_unary(request, target, '/aeca.rpc.db.document.DocumentDBService/truncate_collection',
             document__db__pb2.TruncateCollectionRequest.SerializeToString,
             document__db__pb2.TruncateCollectionResponse.FromString,
             options, channel_credentials,
@@ -602,7 +602,7 @@ class DocumentDBService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/cognica.rpc.db.document.DocumentDBService/create_index',
+        return grpc.experimental.unary_unary(request, target, '/aeca.rpc.db.document.DocumentDBService/create_index',
             document__db__pb2.CreateIndexRequest.SerializeToString,
             document__db__pb2.CreateIndexResponse.FromString,
             options, channel_credentials,
@@ -619,7 +619,7 @@ class DocumentDBService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/cognica.rpc.db.document.DocumentDBService/drop_index',
+        return grpc.experimental.unary_unary(request, target, '/aeca.rpc.db.document.DocumentDBService/drop_index',
             document__db__pb2.DropIndexRequest.SerializeToString,
             document__db__pb2.DropIndexResponse.FromString,
             options, channel_credentials,
@@ -636,7 +636,7 @@ class DocumentDBService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/cognica.rpc.db.document.DocumentDBService/rename_index',
+        return grpc.experimental.unary_unary(request, target, '/aeca.rpc.db.document.DocumentDBService/rename_index',
             document__db__pb2.RenameIndexRequest.SerializeToString,
             document__db__pb2.RenameIndexResponse.FromString,
             options, channel_credentials,
@@ -653,7 +653,7 @@ class DocumentDBService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/cognica.rpc.db.document.DocumentDBService/get_index',
+        return grpc.experimental.unary_unary(request, target, '/aeca.rpc.db.document.DocumentDBService/get_index',
             document__db__pb2.GetIndexRequest.SerializeToString,
             document__db__pb2.GetIndexResponse.FromString,
             options, channel_credentials,

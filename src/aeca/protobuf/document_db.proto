@@ -1,7 +1,7 @@
 //
-// Cognica
+// Aeca
 //
-// Copyright (c) 2023 Cognica, Inc.
+// Copyright (c) 2023-2024 Aeca, Inc.
 //
 
 // clang-format off
@@ -11,7 +11,7 @@
 
 syntax = "proto3";
 
-package cognica.rpc.db.document;
+package aeca.rpc.db.document;
 
 import "document.proto";
 

@@ -1,0 +1,64 @@
+//
+// Aeca
+//
+// Copyright (c) 2023-2024 Aeca, Inc.
+//
+
+// clang-format off
+// protoc --cpp_out=. workspaces.proto
+// protoc --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_cpp_plugin` workspaces.proto
+// clang-format on
+
+syntax = "proto3";
+
+package aeca.rpc;
+
+option cc_enable_arenas = true;
+
+service WorkspacesService {
+  rpc create_workspace(CreateWorkspaceRequest)
+      returns (CreateWorkspaceResponse) {}
+  rpc drop_workspace(DropWorkspaceRequest) returns (DropWorkspaceResponse) {}
+
+  rpc list_workspaces(ListWorkspacesRequest) returns (ListWorkspacesResponse) {}
+}
+
+message CreateWorkspaceRequest { string workspace_name = 1; }
+
+message CreateWorkspaceResponse {
+  enum Status {
+    Invalid = 0;
+    Success = 1;
+    AlreadyExists = 2;
+  }
+
+  Status status = 1;
+}
+
+message DropWorkspaceRequest { string workspace_name = 1; }
+
+message DropWorkspaceResponse {
+  enum Status {
+    Invalid = 0;
+    Success = 1;
+  }
+
+  Status status = 1;
+}
+
+message ListWorkspacesRequest {}
+
+message Workspace {
+  uint32 workspace_id = 1;
+  string workspace_name = 2;
+}
+
+message ListWorkspacesResponse {
+  enum Status {
+    Invalid = 0;
+    Success = 1;
+  }
+
+  Status status = 1;
+  repeated Workspace workspaces = 2;
+}

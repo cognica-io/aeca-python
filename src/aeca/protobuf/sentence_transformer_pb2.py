@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1asentence_transformer.proto\x12 cognica.rpc.sentence_transformer\"$\n\x06Tensor\x12\x0c\n\x04\x64ims\x18\x01 \x01(\x05\x12\x0c\n\x04\x64\x61ta\x18\x02 \x03(\x02\"\"\n\x0bProfileInfo\x12\x13\n\x0b\x64uration_us\x18\x01 \x01(\x04\"?\n\x16SentenceEncoderRequest\x12\x12\n\nmodel_name\x18\x01 \x01(\t\x12\x11\n\tsentences\x18\x02 \x03(\t\"\xe7\x01\n\x17SentenceEncoderResponse\x12<\n\x06status\x18\x01 \x01(\x0e\x32,.cognica.rpc.sentence_transformer.StatusType\x12\x12\n\nmodel_name\x18\x02 \x01(\t\x12\x39\n\x07tensors\x18\x03 \x03(\x0b\x32(.cognica.rpc.sentence_transformer.Tensor\x12?\n\x08profiles\x18\x04 \x03(\x0b\x32-.cognica.rpc.sentence_transformer.ProfileInfo\"4\n\x0cSentencePair\x12\x11\n\tsentence1\x18\x01 \x01(\t\x12\x11\n\tsentence2\x18\x02 \x01(\t\"l\n\x13\x43rossEncoderRequest\x12\x12\n\nmodel_name\x18\x01 \x01(\t\x12\x41\n\tsentences\x18\x02 \x03(\x0b\x32..cognica.rpc.sentence_transformer.SentencePair\"\xb9\x01\n\x14\x43rossEncoderResponse\x12<\n\x06status\x18\x01 \x01(\x0e\x32,.cognica.rpc.sentence_transformer.StatusType\x12\x12\n\nmodel_name\x18\x02 \x01(\t\x12\x0e\n\x06scores\x18\x03 \x03(\x02\x12?\n\x08profiles\x18\x04 \x03(\x0b\x32-.cognica.rpc.sentence_transformer.ProfileInfo\"\xb0\x01\n\x12\x43LIPEncoderRequest\x12\x12\n\nmodel_name\x18\x01 \x01(\t\x12P\n\x06\x66ormat\x18\x02 \x01(\x0e\x32@.cognica.rpc.sentence_transformer.CLIPEncoderRequest.InputFormat\x12\x0e\n\x06inputs\x18\x03 \x03(\x0c\"$\n\x0bInputFormat\x12\t\n\x05kText\x10\x00\x12\n\n\x06kImage\x10\x01\"\xe3\x01\n\x13\x43LIPEncoderResponse\x12<\n\x06status\x18\x01 \x01(\x0e\x32,.cognica.rpc.sentence_transformer.StatusType\x12\x12\n\nmodel_name\x18\x02 \x01(\t\x12\x39\n\x07tensors\x18\x03 \x03(\x0b\x32(.cognica.rpc.sentence_transformer.Tensor\x12?\n\x08profiles\x18\x04 \x03(\x0b\x32-.cognica.rpc.sentence_transformer.ProfileInfo\"Z\n\x10QAEncoderRequest\x12\x12\n\nmodel_name\x18\x01 \x01(\t\x12\x11\n\tquestions\x18\x02 \x03(\t\x12\x10\n\x08\x63ontexts\x18\x03 \x03(\t\x12\r\n\x05top_k\x18\x04 \x01(\x05\"\xa6\x03\n\x11QAEncoderResponse\x12<\n\x06status\x18\x01 \x01(\x0e\x32,.cognica.rpc.sentence_transformer.StatusType\x12\x12\n\nmodel_name\x18\x02 \x01(\t\x12R\n\x07\x61nswers\x18\x03 \x03(\x0b\x32\x41.cognica.rpc.sentence_transformer.QAEncoderResponse.CandidateList\x12?\n\x08profiles\x18\x04 \x03(\x0b\x32-.cognica.rpc.sentence_transformer.ProfileInfo\x1a\x46\n\tCandidate\x12\r\n\x05score\x18\x01 \x01(\x02\x12\r\n\x05\x62\x65gin\x18\x02 \x01(\x05\x12\x0b\n\x03\x65nd\x18\x03 \x01(\x05\x12\x0e\n\x06\x61nswer\x18\x04 \x01(\t\x1a\x62\n\rCandidateList\x12Q\n\ncandidates\x18\x01 \x03(\x0b\x32=.cognica.rpc.sentence_transformer.QAEncoderResponse.Candidate*3\n\nStatusType\x12\x07\n\x03kOK\x10\x00\x12\r\n\tkNotFound\x10\x01\x12\r\n\tkInternal\x10\n2\x9d\x01\n\x1aSentenceTransformerService\x12\x7f\n\x06\x65ncode\x12\x38.cognica.rpc.sentence_transformer.SentenceEncoderRequest\x1a\x39.cognica.rpc.sentence_transformer.SentenceEncoderResponse\"\x00\x32\x91\x01\n\x13\x43rossEncoderService\x12z\n\x07predict\x12\x35.cognica.rpc.sentence_transformer.CrossEncoderRequest\x1a\x36.cognica.rpc.sentence_transformer.CrossEncoderResponse\"\x00\x32\x8d\x01\n\x12\x43LIPEncoderService\x12w\n\x06\x65ncode\x12\x34.cognica.rpc.sentence_transformer.CLIPEncoderRequest\x1a\x35.cognica.rpc.sentence_transformer.CLIPEncoderResponse\"\x00\x32\x88\x01\n\x10QAEncoderService\x12t\n\x07predict\x12\x32.cognica.rpc.sentence_transformer.QAEncoderRequest\x1a\x33.cognica.rpc.sentence_transformer.QAEncoderResponse\"\x00\x42\x03\xf8\x01\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1asentence_transformer.proto\x12\x1d\x61\x65\x63\x61.rpc.sentence_transformer\"$\n\x06Tensor\x12\x0c\n\x04\x64ims\x18\x01 \x01(\x05\x12\x0c\n\x04\x64\x61ta\x18\x02 \x03(\x02\"\"\n\x0bProfileInfo\x12\x13\n\x0b\x64uration_us\x18\x01 \x01(\x04\"?\n\x16SentenceEncoderRequest\x12\x12\n\nmodel_name\x18\x01 \x01(\t\x12\x11\n\tsentences\x18\x02 \x03(\t\"\xde\x01\n\x17SentenceEncoderResponse\x12\x39\n\x06status\x18\x01 \x01(\x0e\x32).aeca.rpc.sentence_transformer.StatusType\x12\x12\n\nmodel_name\x18\x02 \x01(\t\x12\x36\n\x07tensors\x18\x03 \x03(\x0b\x32%.aeca.rpc.sentence_transformer.Tensor\x12<\n\x08profiles\x18\x04 \x03(\x0b\x32*.aeca.rpc.sentence_transformer.ProfileInfo\"4\n\x0cSentencePair\x12\x11\n\tsentence1\x18\x01 \x01(\t\x12\x11\n\tsentence2\x18\x02 \x01(\t\"i\n\x13\x43rossEncoderRequest\x12\x12\n\nmodel_name\x18\x01 \x01(\t\x12>\n\tsentences\x18\x02 \x03(\x0b\x32+.aeca.rpc.sentence_transformer.SentencePair\"\xb3\x01\n\x14\x43rossEncoderResponse\x12\x39\n\x06status\x18\x01 \x01(\x0e\x32).aeca.rpc.sentence_transformer.StatusType\x12\x12\n\nmodel_name\x18\x02 \x01(\t\x12\x0e\n\x06scores\x18\x03 \x03(\x02\x12<\n\x08profiles\x18\x04 \x03(\x0b\x32*.aeca.rpc.sentence_transformer.ProfileInfo\"\xad\x01\n\x12\x43LIPEncoderRequest\x12\x12\n\nmodel_name\x18\x01 \x01(\t\x12M\n\x06\x66ormat\x18\x02 \x01(\x0e\x32=.aeca.rpc.sentence_transformer.CLIPEncoderRequest.InputFormat\x12\x0e\n\x06inputs\x18\x03 \x03(\x0c\"$\n\x0bInputFormat\x12\t\n\x05kText\x10\x00\x12\n\n\x06kImage\x10\x01\"\xda\x01\n\x13\x43LIPEncoderResponse\x12\x39\n\x06status\x18\x01 \x01(\x0e\x32).aeca.rpc.sentence_transformer.StatusType\x12\x12\n\nmodel_name\x18\x02 \x01(\t\x12\x36\n\x07tensors\x18\x03 \x03(\x0b\x32%.aeca.rpc.sentence_transformer.Tensor\x12<\n\x08profiles\x18\x04 \x03(\x0b\x32*.aeca.rpc.sentence_transformer.ProfileInfo\"Z\n\x10QAEncoderRequest\x12\x12\n\nmodel_name\x18\x01 \x01(\t\x12\x11\n\tquestions\x18\x02 \x03(\t\x12\x10\n\x08\x63ontexts\x18\x03 \x03(\t\x12\r\n\x05top_k\x18\x04 \x01(\x05\"\x9a\x03\n\x11QAEncoderResponse\x12\x39\n\x06status\x18\x01 \x01(\x0e\x32).aeca.rpc.sentence_transformer.StatusType\x12\x12\n\nmodel_name\x18\x02 \x01(\t\x12O\n\x07\x61nswers\x18\x03 \x03(\x0b\x32>.aeca.rpc.sentence_transformer.QAEncoderResponse.CandidateList\x12<\n\x08profiles\x18\x04 \x03(\x0b\x32*.aeca.rpc.sentence_transformer.ProfileInfo\x1a\x46\n\tCandidate\x12\r\n\x05score\x18\x01 \x01(\x02\x12\r\n\x05\x62\x65gin\x18\x02 \x01(\x05\x12\x0b\n\x03\x65nd\x18\x03 \x01(\x05\x12\x0e\n\x06\x61nswer\x18\x04 \x01(\t\x1a_\n\rCandidateList\x12N\n\ncandidates\x18\x01 \x03(\x0b\x32:.aeca.rpc.sentence_transformer.QAEncoderResponse.Candidate*3\n\nStatusType\x12\x07\n\x03kOK\x10\x00\x12\r\n\tkNotFound\x10\x01\x12\r\n\tkInternal\x10\n2\x97\x01\n\x1aSentenceTransformerService\x12y\n\x06\x65ncode\x12\x35.aeca.rpc.sentence_transformer.SentenceEncoderRequest\x1a\x36.aeca.rpc.sentence_transformer.SentenceEncoderResponse\"\x00\x32\x8b\x01\n\x13\x43rossEncoderService\x12t\n\x07predict\x12\x32.aeca.rpc.sentence_transformer.CrossEncoderRequest\x1a\x33.aeca.rpc.sentence_transformer.CrossEncoderResponse\"\x00\x32\x87\x01\n\x12\x43LIPEncoderService\x12q\n\x06\x65ncode\x12\x31.aeca.rpc.sentence_transformer.CLIPEncoderRequest\x1a\x32.aeca.rpc.sentence_transformer.CLIPEncoderResponse\"\x00\x32\x82\x01\n\x10QAEncoderService\x12n\n\x07predict\x12/.aeca.rpc.sentence_transformer.QAEncoderRequest\x1a\x30.aeca.rpc.sentence_transformer.QAEncoderResponse\"\x00\x42\x03\xf8\x01\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -22,42 +22,42 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'sentence_transformer_pb2', 
 if _descriptor._USE_C_DESCRIPTORS == False:
   _globals['DESCRIPTOR']._options = None
   _globals['DESCRIPTOR']._serialized_options = b'\370\001\001'
-  _globals['_STATUSTYPE']._serialized_start=1715
-  _globals['_STATUSTYPE']._serialized_end=1766
-  _globals['_TENSOR']._serialized_start=64
-  _globals['_TENSOR']._serialized_end=100
-  _globals['_PROFILEINFO']._serialized_start=102
-  _globals['_PROFILEINFO']._serialized_end=136
-  _globals['_SENTENCEENCODERREQUEST']._serialized_start=138
-  _globals['_SENTENCEENCODERREQUEST']._serialized_end=201
-  _globals['_SENTENCEENCODERRESPONSE']._serialized_start=204
-  _globals['_SENTENCEENCODERRESPONSE']._serialized_end=435
-  _globals['_SENTENCEPAIR']._serialized_start=437
-  _globals['_SENTENCEPAIR']._serialized_end=489
-  _globals['_CROSSENCODERREQUEST']._serialized_start=491
-  _globals['_CROSSENCODERREQUEST']._serialized_end=599
-  _globals['_CROSSENCODERRESPONSE']._serialized_start=602
-  _globals['_CROSSENCODERRESPONSE']._serialized_end=787
-  _globals['_CLIPENCODERREQUEST']._serialized_start=790
-  _globals['_CLIPENCODERREQUEST']._serialized_end=966
-  _globals['_CLIPENCODERREQUEST_INPUTFORMAT']._serialized_start=930
-  _globals['_CLIPENCODERREQUEST_INPUTFORMAT']._serialized_end=966
-  _globals['_CLIPENCODERRESPONSE']._serialized_start=969
-  _globals['_CLIPENCODERRESPONSE']._serialized_end=1196
-  _globals['_QAENCODERREQUEST']._serialized_start=1198
-  _globals['_QAENCODERREQUEST']._serialized_end=1288
-  _globals['_QAENCODERRESPONSE']._serialized_start=1291
-  _globals['_QAENCODERRESPONSE']._serialized_end=1713
-  _globals['_QAENCODERRESPONSE_CANDIDATE']._serialized_start=1543
-  _globals['_QAENCODERRESPONSE_CANDIDATE']._serialized_end=1613
-  _globals['_QAENCODERRESPONSE_CANDIDATELIST']._serialized_start=1615
-  _globals['_QAENCODERRESPONSE_CANDIDATELIST']._serialized_end=1713
-  _globals['_SENTENCETRANSFORMERSERVICE']._serialized_start=1769
-  _globals['_SENTENCETRANSFORMERSERVICE']._serialized_end=1926
-  _globals['_CROSSENCODERSERVICE']._serialized_start=1929
-  _globals['_CROSSENCODERSERVICE']._serialized_end=2074
-  _globals['_CLIPENCODERSERVICE']._serialized_start=2077
-  _globals['_CLIPENCODERSERVICE']._serialized_end=2218
-  _globals['_QAENCODERSERVICE']._serialized_start=2221
-  _globals['_QAENCODERSERVICE']._serialized_end=2357
+  _globals['_STATUSTYPE']._serialized_start=1670
+  _globals['_STATUSTYPE']._serialized_end=1721
+  _globals['_TENSOR']._serialized_start=61
+  _globals['_TENSOR']._serialized_end=97
+  _globals['_PROFILEINFO']._serialized_start=99
+  _globals['_PROFILEINFO']._serialized_end=133
+  _globals['_SENTENCEENCODERREQUEST']._serialized_start=135
+  _globals['_SENTENCEENCODERREQUEST']._serialized_end=198
+  _globals['_SENTENCEENCODERRESPONSE']._serialized_start=201
+  _globals['_SENTENCEENCODERRESPONSE']._serialized_end=423
+  _globals['_SENTENCEPAIR']._serialized_start=425
+  _globals['_SENTENCEPAIR']._serialized_end=477
+  _globals['_CROSSENCODERREQUEST']._serialized_start=479
+  _globals['_CROSSENCODERREQUEST']._serialized_end=584
+  _globals['_CROSSENCODERRESPONSE']._serialized_start=587
+  _globals['_CROSSENCODERRESPONSE']._serialized_end=766
+  _globals['_CLIPENCODERREQUEST']._serialized_start=769
+  _globals['_CLIPENCODERREQUEST']._serialized_end=942
+  _globals['_CLIPENCODERREQUEST_INPUTFORMAT']._serialized_start=906
+  _globals['_CLIPENCODERREQUEST_INPUTFORMAT']._serialized_end=942
+  _globals['_CLIPENCODERRESPONSE']._serialized_start=945
+  _globals['_CLIPENCODERRESPONSE']._serialized_end=1163
+  _globals['_QAENCODERREQUEST']._serialized_start=1165
+  _globals['_QAENCODERREQUEST']._serialized_end=1255
+  _globals['_QAENCODERRESPONSE']._serialized_start=1258
+  _globals['_QAENCODERRESPONSE']._serialized_end=1668
+  _globals['_QAENCODERRESPONSE_CANDIDATE']._serialized_start=1501
+  _globals['_QAENCODERRESPONSE_CANDIDATE']._serialized_end=1571
+  _globals['_QAENCODERRESPONSE_CANDIDATELIST']._serialized_start=1573
+  _globals['_QAENCODERRESPONSE_CANDIDATELIST']._serialized_end=1668
+  _globals['_SENTENCETRANSFORMERSERVICE']._serialized_start=1724
+  _globals['_SENTENCETRANSFORMERSERVICE']._serialized_end=1875
+  _globals['_CROSSENCODERSERVICE']._serialized_start=1878
+  _globals['_CROSSENCODERSERVICE']._serialized_end=2017
+  _globals['_CLIPENCODERSERVICE']._serialized_start=2020
+  _globals['_CLIPENCODERSERVICE']._serialized_end=2155
+  _globals['_QAENCODERSERVICE']._serialized_start=2158
+  _globals['_QAENCODERSERVICE']._serialized_end=2288
 # @@protoc_insertion_point(module_scope)

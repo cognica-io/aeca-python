@@ -1,12 +1,17 @@
 //
-// Cognica
+// Aeca
 //
-// Copyright (c) 2023 Cognica, Inc.
+// Copyright (c) 2023-2024 Aeca, Inc.
 //
+
+// clang-format off
+// protoc --cpp_out=. fts_analysis_pipeline.proto
+// protoc --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_cpp_plugin` fts_analysis_pipeline.proto
+// clang-format on
 
 syntax = "proto3";
 
-package cognica.rpc.db.fts;
+package aeca.rpc.db.fts;
 
 option cc_enable_arenas = true;
 

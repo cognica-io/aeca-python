@@ -15,7 +15,7 @@ class SentenceTransformerServiceStub(object):
             channel: A grpc.Channel.
         """
         self.encode = channel.unary_unary(
-                '/cognica.rpc.sentence_transformer.SentenceTransformerService/encode',
+                '/aeca.rpc.sentence_transformer.SentenceTransformerService/encode',
                 request_serializer=sentence__transformer__pb2.SentenceEncoderRequest.SerializeToString,
                 response_deserializer=sentence__transformer__pb2.SentenceEncoderResponse.FromString,
                 )
@@ -40,7 +40,7 @@ def add_SentenceTransformerServiceServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'cognica.rpc.sentence_transformer.SentenceTransformerService', rpc_method_handlers)
+            'aeca.rpc.sentence_transformer.SentenceTransformerService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -59,7 +59,7 @@ class SentenceTransformerService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/cognica.rpc.sentence_transformer.SentenceTransformerService/encode',
+        return grpc.experimental.unary_unary(request, target, '/aeca.rpc.sentence_transformer.SentenceTransformerService/encode',
             sentence__transformer__pb2.SentenceEncoderRequest.SerializeToString,
             sentence__transformer__pb2.SentenceEncoderResponse.FromString,
             options, channel_credentials,
@@ -76,7 +76,7 @@ class CrossEncoderServiceStub(object):
             channel: A grpc.Channel.
         """
         self.predict = channel.unary_unary(
-                '/cognica.rpc.sentence_transformer.CrossEncoderService/predict',
+                '/aeca.rpc.sentence_transformer.CrossEncoderService/predict',
                 request_serializer=sentence__transformer__pb2.CrossEncoderRequest.SerializeToString,
                 response_deserializer=sentence__transformer__pb2.CrossEncoderResponse.FromString,
                 )
@@ -101,7 +101,7 @@ def add_CrossEncoderServiceServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'cognica.rpc.sentence_transformer.CrossEncoderService', rpc_method_handlers)
+            'aeca.rpc.sentence_transformer.CrossEncoderService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -120,7 +120,7 @@ class CrossEncoderService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/cognica.rpc.sentence_transformer.CrossEncoderService/predict',
+        return grpc.experimental.unary_unary(request, target, '/aeca.rpc.sentence_transformer.CrossEncoderService/predict',
             sentence__transformer__pb2.CrossEncoderRequest.SerializeToString,
             sentence__transformer__pb2.CrossEncoderResponse.FromString,
             options, channel_credentials,
@@ -137,7 +137,7 @@ class CLIPEncoderServiceStub(object):
             channel: A grpc.Channel.
         """
         self.encode = channel.unary_unary(
-                '/cognica.rpc.sentence_transformer.CLIPEncoderService/encode',
+                '/aeca.rpc.sentence_transformer.CLIPEncoderService/encode',
                 request_serializer=sentence__transformer__pb2.CLIPEncoderRequest.SerializeToString,
                 response_deserializer=sentence__transformer__pb2.CLIPEncoderResponse.FromString,
                 )
@@ -162,7 +162,7 @@ def add_CLIPEncoderServiceServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'cognica.rpc.sentence_transformer.CLIPEncoderService', rpc_method_handlers)
+            'aeca.rpc.sentence_transformer.CLIPEncoderService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -181,7 +181,7 @@ class CLIPEncoderService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/cognica.rpc.sentence_transformer.CLIPEncoderService/encode',
+        return grpc.experimental.unary_unary(request, target, '/aeca.rpc.sentence_transformer.CLIPEncoderService/encode',
             sentence__transformer__pb2.CLIPEncoderRequest.SerializeToString,
             sentence__transformer__pb2.CLIPEncoderResponse.FromString,
             options, channel_credentials,
@@ -198,7 +198,7 @@ class QAEncoderServiceStub(object):
             channel: A grpc.Channel.
         """
         self.predict = channel.unary_unary(
-                '/cognica.rpc.sentence_transformer.QAEncoderService/predict',
+                '/aeca.rpc.sentence_transformer.QAEncoderService/predict',
                 request_serializer=sentence__transformer__pb2.QAEncoderRequest.SerializeToString,
                 response_deserializer=sentence__transformer__pb2.QAEncoderResponse.FromString,
                 )
@@ -223,7 +223,7 @@ def add_QAEncoderServiceServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'cognica.rpc.sentence_transformer.QAEncoderService', rpc_method_handlers)
+            'aeca.rpc.sentence_transformer.QAEncoderService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -242,7 +242,7 @@ class QAEncoderService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/cognica.rpc.sentence_transformer.QAEncoderService/predict',
+        return grpc.experimental.unary_unary(request, target, '/aeca.rpc.sentence_transformer.QAEncoderService/predict',
             sentence__transformer__pb2.QAEncoderRequest.SerializeToString,
             sentence__transformer__pb2.QAEncoderResponse.FromString,
             options, channel_credentials,

@@ -1,12 +1,17 @@
 //
-// Cognica
+// Aeca
 //
-// Copyright (c) 2023 Cognica, Inc.
+// Copyright (c) 2023-2024 Aeca, Inc.
 //
+
+// clang-format off
+// protoc --cpp_out=. sentence_transformer.proto
+// protoc --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_cpp_plugin` sentence_transformer.proto
+// clang-format on
 
 syntax = "proto3";
 
-package cognica.rpc.sentence_transformer;
+package aeca.rpc.sentence_transformer;
 
 option cc_enable_arenas = true;
 

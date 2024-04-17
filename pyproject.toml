@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "aeca"
-version = "0.1.15.dev2"
+version = "1.0.0.dev1"
 authors = [{ name = "Aeca, Inc.", email = "jaepil@aeca.ai" }]
 description = "Python client for Aeca database"
 readme = "README.md"
@@ -52,8 +52,7 @@ classifiers = [
 "Homepage" = "https://www.aeca.ai"
 
 [project.optional-dependencies]
-  protobuf = ["grpcio>=1.43.0"]
-  server = ["cognica-server"]
+protobuf = ["grpcio>=1.43.0"]
 
 [tool.black]
 line-length = 80

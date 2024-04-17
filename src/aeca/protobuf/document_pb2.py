@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0e\x64ocument.proto\x12\x17\x63ognica.rpc.db.document\"\xdb\x01\n\x05Value\x12\x0e\n\x04null\x18\x01 \x01(\x08H\x00\x12\x0e\n\x04\x62ool\x18\x02 \x01(\x08H\x00\x12\x0f\n\x05int64\x18\x03 \x01(\x03H\x00\x12\x10\n\x06uint64\x18\x04 \x01(\x04H\x00\x12\x10\n\x06\x64ouble\x18\x05 \x01(\x01H\x00\x12\x10\n\x06string\x18\x06 \x01(\tH\x00\x12/\n\x05\x61rray\x18\x07 \x01(\x0b\x32\x1e.cognica.rpc.db.document.ArrayH\x00\x12\x31\n\x06object\x18\x08 \x01(\x0b\x32\x1f.cognica.rpc.db.document.ObjectH\x00\x42\x07\n\x05value\"6\n\x05\x41rray\x12-\n\x05value\x18\x01 \x03(\x0b\x32\x1e.cognica.rpc.db.document.Value\"\x91\x01\n\x06Object\x12\x39\n\x05value\x18\x01 \x03(\x0b\x32*.cognica.rpc.db.document.Object.ValueEntry\x1aL\n\nValueEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12-\n\x05value\x18\x02 \x01(\x0b\x32\x1e.cognica.rpc.db.document.Value:\x02\x38\x01\"U\n\x08\x44ocument\x12\x31\n\x06object\x18\x01 \x01(\x0b\x32\x1f.cognica.rpc.db.document.ObjectH\x00\x12\x0e\n\x04json\x18\x02 \x01(\tH\x00\x42\x06\n\x04typeB\x03\xf8\x01\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0e\x64ocument.proto\x12\x14\x61\x65\x63\x61.rpc.db.document\"\xd5\x01\n\x05Value\x12\x0e\n\x04null\x18\x01 \x01(\x08H\x00\x12\x0e\n\x04\x62ool\x18\x02 \x01(\x08H\x00\x12\x0f\n\x05int64\x18\x03 \x01(\x03H\x00\x12\x10\n\x06uint64\x18\x04 \x01(\x04H\x00\x12\x10\n\x06\x64ouble\x18\x05 \x01(\x01H\x00\x12\x10\n\x06string\x18\x06 \x01(\tH\x00\x12,\n\x05\x61rray\x18\x07 \x01(\x0b\x32\x1b.aeca.rpc.db.document.ArrayH\x00\x12.\n\x06object\x18\x08 \x01(\x0b\x32\x1c.aeca.rpc.db.document.ObjectH\x00\x42\x07\n\x05value\"3\n\x05\x41rray\x12*\n\x05value\x18\x01 \x03(\x0b\x32\x1b.aeca.rpc.db.document.Value\"\x8b\x01\n\x06Object\x12\x36\n\x05value\x18\x01 \x03(\x0b\x32\'.aeca.rpc.db.document.Object.ValueEntry\x1aI\n\nValueEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12*\n\x05value\x18\x02 \x01(\x0b\x32\x1b.aeca.rpc.db.document.Value:\x02\x38\x01\"R\n\x08\x44ocument\x12.\n\x06object\x18\x01 \x01(\x0b\x32\x1c.aeca.rpc.db.document.ObjectH\x00\x12\x0e\n\x04json\x18\x02 \x01(\tH\x00\x42\x06\n\x04typeB\x03\xf8\x01\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -24,14 +24,14 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _globals['DESCRIPTOR']._serialized_options = b'\370\001\001'
   _globals['_OBJECT_VALUEENTRY']._options = None
   _globals['_OBJECT_VALUEENTRY']._serialized_options = b'8\001'
-  _globals['_VALUE']._serialized_start=44
-  _globals['_VALUE']._serialized_end=263
-  _globals['_ARRAY']._serialized_start=265
-  _globals['_ARRAY']._serialized_end=319
-  _globals['_OBJECT']._serialized_start=322
-  _globals['_OBJECT']._serialized_end=467
-  _globals['_OBJECT_VALUEENTRY']._serialized_start=391
-  _globals['_OBJECT_VALUEENTRY']._serialized_end=467
-  _globals['_DOCUMENT']._serialized_start=469
-  _globals['_DOCUMENT']._serialized_end=554
+  _globals['_VALUE']._serialized_start=41
+  _globals['_VALUE']._serialized_end=254
+  _globals['_ARRAY']._serialized_start=256
+  _globals['_ARRAY']._serialized_end=307
+  _globals['_OBJECT']._serialized_start=310
+  _globals['_OBJECT']._serialized_end=449
+  _globals['_OBJECT_VALUEENTRY']._serialized_start=376
+  _globals['_OBJECT_VALUEENTRY']._serialized_end=449
+  _globals['_DOCUMENT']._serialized_start=451
+  _globals['_DOCUMENT']._serialized_end=533
 # @@protoc_insertion_point(module_scope)
