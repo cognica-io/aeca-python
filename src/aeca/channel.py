@@ -13,7 +13,7 @@ import grpc
 
 
 _CHANNEL_OPTIONS = [
-    ("grpc.max_concurrent_streams", 4),
+    ("grpc.max_concurrent_streams", 16),
     ("grpc.max_send_message_length", -1),
     ("grpc.max_receive_message_length", -1),
     ("grpc.http2.max_frame_size", 10 * 1024 * 1024),  # 10MB
