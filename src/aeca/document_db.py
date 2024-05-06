@@ -310,7 +310,7 @@ class DocumentDB:
 
         self._invoke(self._stub.remove, req, wait_for_ready=True)
 
-    def explain(self, collection: str, query: dict) -> dict | None:
+    def explain(self, collection: str, query: dict | list[dict]) -> dict | None:
         req = ExplainRequest(
             queries=[Query(collection_name=collection, query=_to_json(query))]
         )
@@ -327,7 +327,7 @@ class DocumentDB:
                 {
                     "collection_name": query_plan.collection_name,
                     "index_name": query_plan.index_name,
-                    "query_plan": query_plan.query_plan,
+                    "query_plan": json.loads(query_plan.query_plan),
                 }
                 for query_plan in resp.query_plans
             ],
