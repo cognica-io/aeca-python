@@ -1,0 +1,41 @@
+//
+// Aeca
+//
+// Copyright (c) 2023-2024 Aeca, Inc.
+//
+
+// clang-format off
+// protoc --cpp_out=. system_metrics.proto
+// protoc --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_cpp_plugin` system_metrics.proto
+// clang-format on
+
+syntax = "proto3";
+
+package aeca.rpc;
+
+option cc_enable_arenas = true;
+
+service SystemMetricsService {
+  rpc get_snapshot(GetSystemMetricsSnapshotRequest)
+      returns (GetSystemMetricsSnapshotResponse) {}
+}
+
+message GetSystemMetricsSnapshotRequest {
+  string client_name = 1;
+  string version = 2;
+}
+
+message SystemMetricsSnapshot {
+  string server_name = 1;
+  string version = 2;
+  string persistent_id = 3;
+}
+
+message GetSystemMetricsSnapshotResponse {
+  enum Status {
+    Success = 0;
+  }
+
+  Status status = 1;
+  SystemMetricsSnapshot snapshot = 2;
+}
