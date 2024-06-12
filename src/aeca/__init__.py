@@ -16,6 +16,7 @@ from aeca.sentence_transformer import (
     SentenceTransformerCLIPEncoder,
     SentenceTransformerQAEncoder,
 )
+from aeca.system_metrics import SystemMetrics
 
 
 __all__ = [
@@ -28,4 +29,5 @@ __all__ = [
     "SentenceTransformerCrossEncoder",
     "SentenceTransformerCLIPEncoder",
     "SentenceTransformerQAEncoder",
+    "SystemMetrics",
 ]

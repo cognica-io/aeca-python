@@ -25,11 +25,11 @@ messages: t.TypeAlias = system_metrics_pb2  # type: ignore
 
 SystemMetricsServiceStub = system_metrics_pb2_grpc.SystemMetricsServiceStub
 
-GetSystemMetricsRequest: t.TypeAlias = (
-    messages.GetSystemMetricsRequest  # type: ignore
+GetSystemMetricsSnapshotRequest: t.TypeAlias = (
+    messages.GetSystemMetricsSnapshotRequest  # type: ignore
 )
-GetSystemMetricsResponse: t.TypeAlias = (
-    messages.GetSystemMetricsResponse  # type: ignore
+GetSystemMetricsSnapshotResponse: t.TypeAlias = (
+    messages.GetSystemMetricsSnapshotResponse  # type: ignore
 )
 
 
@@ -50,11 +50,11 @@ class SystemMetrics:
         client_name: str | None = None,
         version: str | None = None,
     ) -> str:
-        req = GetSystemMetricsRequest(
+        req = GetSystemMetricsSnapshotRequest(
             client_name=client_name,
             version=version,
         )
-        resp: GetSystemMetricsResponse = self._invoke(
+        resp: GetSystemMetricsSnapshotResponse = self._invoke(
             self._stub.get_snapshot, req, wait_for_ready=True
         )
 
