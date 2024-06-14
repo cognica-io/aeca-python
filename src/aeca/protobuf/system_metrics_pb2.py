@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14system_metrics.proto\x12\x08\x61\x65\x63\x61.rpc\"G\n\x1fGetSystemMetricsSnapshotRequest\x12\x13\n\x0b\x63lient_name\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\"T\n\x15SystemMetricsSnapshot\x12\x13\n\x0bserver_name\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\x12\x15\n\rpersistent_id\x18\x03 \x01(\t\"\xaf\x01\n GetSystemMetricsSnapshotResponse\x12\x41\n\x06status\x18\x01 \x01(\x0e\x32\x31.aeca.rpc.GetSystemMetricsSnapshotResponse.Status\x12\x31\n\x08snapshot\x18\x02 \x01(\x0b\x32\x1f.aeca.rpc.SystemMetricsSnapshot\"\x15\n\x06Status\x12\x0b\n\x07Success\x10\x00\x32\x7f\n\x14SystemMetricsService\x12g\n\x0cget_snapshot\x12).aeca.rpc.GetSystemMetricsSnapshotRequest\x1a*.aeca.rpc.GetSystemMetricsSnapshotResponse\"\x00\x42\x03\xf8\x01\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14system_metrics.proto\x12\x08\x61\x65\x63\x61.rpc\"G\n\x1fGetSystemMetricsSnapshotRequest\x12\x13\n\x0b\x63lient_name\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\"\xaf\x01\n GetSystemMetricsSnapshotResponse\x12\x41\n\x06status\x18\x01 \x01(\x0e\x32\x31.aeca.rpc.GetSystemMetricsSnapshotResponse.Status\x12\x31\n\x08snapshot\x18\x02 \x01(\x0b\x32\x1f.aeca.rpc.SystemMetricsSnapshot\"\x15\n\x06Status\x12\x0b\n\x07Success\x10\x00\"y\n\x15SystemMetricsSnapshot\x12\x33\n\x0c\x61pp_metadata\x18\x01 \x01(\x0b\x32\x1d.aeca.rpc.ApplicationMetadata\x12+\n\x0c\x63luster_info\x18\x02 \x01(\x0b\x32\x15.aeca.rpc.ClusterInfo\"O\n\x13\x41pplicationMetadata\x12\x10\n\x08\x61pp_name\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\x12\x15\n\rpersistent_id\x18\x03 \x01(\t\"Z\n\x0b\x43lusterInfo\x12\x14\n\x0c\x63luster_name\x18\x01 \x01(\t\x12\x12\n\ncluster_id\x18\x02 \x01(\t\x12!\n\x05nodes\x18\x03 \x03(\x0b\x32\x12.aeca.rpc.NodeInfo\"R\n\x08NodeInfo\x12\x11\n\tnode_name\x18\x01 \x01(\t\x12\x0f\n\x07node_id\x18\x02 \x01(\t\x12\x0f\n\x07node_ip\x18\x03 \x01(\t\x12\x11\n\tnode_port\x18\x04 \x01(\x05\x32\x7f\n\x14SystemMetricsService\x12g\n\x0cget_snapshot\x12).aeca.rpc.GetSystemMetricsSnapshotRequest\x1a*.aeca.rpc.GetSystemMetricsSnapshotResponse\"\x00\x42\x03\xf8\x01\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -24,12 +24,18 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._serialized_options = b'\370\001\001'
   _globals['_GETSYSTEMMETRICSSNAPSHOTREQUEST']._serialized_start=34
   _globals['_GETSYSTEMMETRICSSNAPSHOTREQUEST']._serialized_end=105
-  _globals['_SYSTEMMETRICSSNAPSHOT']._serialized_start=107
-  _globals['_SYSTEMMETRICSSNAPSHOT']._serialized_end=191
-  _globals['_GETSYSTEMMETRICSSNAPSHOTRESPONSE']._serialized_start=194
-  _globals['_GETSYSTEMMETRICSSNAPSHOTRESPONSE']._serialized_end=369
-  _globals['_GETSYSTEMMETRICSSNAPSHOTRESPONSE_STATUS']._serialized_start=348
-  _globals['_GETSYSTEMMETRICSSNAPSHOTRESPONSE_STATUS']._serialized_end=369
-  _globals['_SYSTEMMETRICSSERVICE']._serialized_start=371
-  _globals['_SYSTEMMETRICSSERVICE']._serialized_end=498
+  _globals['_GETSYSTEMMETRICSSNAPSHOTRESPONSE']._serialized_start=108
+  _globals['_GETSYSTEMMETRICSSNAPSHOTRESPONSE']._serialized_end=283
+  _globals['_GETSYSTEMMETRICSSNAPSHOTRESPONSE_STATUS']._serialized_start=262
+  _globals['_GETSYSTEMMETRICSSNAPSHOTRESPONSE_STATUS']._serialized_end=283
+  _globals['_SYSTEMMETRICSSNAPSHOT']._serialized_start=285
+  _globals['_SYSTEMMETRICSSNAPSHOT']._serialized_end=406
+  _globals['_APPLICATIONMETADATA']._serialized_start=408
+  _globals['_APPLICATIONMETADATA']._serialized_end=487
+  _globals['_CLUSTERINFO']._serialized_start=489
+  _globals['_CLUSTERINFO']._serialized_end=579
+  _globals['_NODEINFO']._serialized_start=581
+  _globals['_NODEINFO']._serialized_end=663
+  _globals['_SYSTEMMETRICSSERVICE']._serialized_start=665
+  _globals['_SYSTEMMETRICSSERVICE']._serialized_end=792
 # @@protoc_insertion_point(module_scope)
