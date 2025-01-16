@@ -54,5 +54,8 @@ classifiers = [
 [project.optional-dependencies]
 protobuf = ["grpcio>=1.43.0"]
 
+[tool.setuptools.package-data]
+aeca = ["py.typed"]
+
 [tool.black]
 line-length = 80
